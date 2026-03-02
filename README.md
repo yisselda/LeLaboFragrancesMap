@@ -1,8 +1,5 @@
 # Le Labo City Exclusives 
 
-<p align="center">
-  <img src="public/icons/big-bottle.png" alt="Minimal bottle illustration" width="110" />
-</p>
 
 _An independent catalog of Le Labo City Exclusives._
 
@@ -10,6 +7,12 @@ This project looks at City Exclusives through place first, then scent.
 Each entry links a city to its fragrance in a clean, direct way.
 
 It is meant for daydreaming, not shopping.
+
+<p align="center">
+  <img src="public/icons/big-bottle.png" alt="Minimal bottle illustration" width="110" />
+</p>
+
+
 ---
 
 ## Purpose
