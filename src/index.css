@@ -471,7 +471,7 @@ input {
 }
 
 .ring-cover-city {
-  font-size: clamp(20px, 2.8vw, 28px);
+  font-size: clamp(22px, 3.2vw, 32px);
   line-height: 1.1;
   letter-spacing: 0.01em;
   font-weight: 500;
@@ -480,7 +480,7 @@ input {
 }
 
 .ring-cover-fragrance {
-  font-size: clamp(22px, 3.2vw, 32px);
+  font-size: clamp(20px, 2.8vw, 28px);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--text);
@@ -1234,12 +1234,12 @@ input {
   }
 
   .ring-cover-fragrance {
-    font-size: clamp(22px, 6.4vw, 24px);
+    font-size: clamp(30px, 8.3vw, 34px);
     margin-bottom: 6px;
   }
 
   .ring-cover-city {
-    font-size: clamp(30px, 8.3vw, 34px);
+    font-size: clamp(22px, 6.4vw, 24px);
     line-height: 1.08;
     margin-bottom: 6px;
   }
