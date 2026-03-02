@@ -46,7 +46,6 @@ export default function RingCoverCarousel({
     y: number;
     handled: boolean;
   } | null>(null);
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const suppressCardClickRef = useRef(false);
   const suppressClickTimerRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -289,10 +288,19 @@ export default function RingCoverCarousel({
           markScrollDragging();
         }}
         onPointerDown={(event) => {
+          dismissHint();
           if (isMobile) {
+            if (event.pointerType !== "touch") {
+              return;
+            }
+            swipeStartRef.current = {
+              pointerId: event.pointerId,
+              x: event.clientX,
+              y: event.clientY,
+              handled: false,
+            };
             return;
           }
-          dismissHint();
           beginDragState();
           swipeStartRef.current = {
             pointerId: event.pointerId,
@@ -328,6 +336,22 @@ export default function RingCoverCarousel({
         }}
         onPointerUp={(event) => {
           if (isMobile) {
+            const start = swipeStartRef.current;
+            if (!start || start.pointerId !== event.pointerId) {
+              return;
+            }
+
+            const dx = event.clientX - start.x;
+            const dy = event.clientY - start.y;
+
+            if (Math.abs(dx) >= 56 && Math.abs(dx) > Math.abs(dy)) {
+              if (dx < 0) {
+                onSelectIndex(nextIndex);
+              } else {
+                onSelectIndex(prevIndex);
+              }
+            }
+            swipeStartRef.current = null;
             return;
           }
           const start = swipeStartRef.current;
@@ -355,51 +379,10 @@ export default function RingCoverCarousel({
         }}
         onPointerCancel={() => {
           if (isMobile) {
+            swipeStartRef.current = null;
             return;
           }
           swipeStartRef.current = null;
-          endDragStateSoon(120);
-        }}
-        onTouchStart={(event) => {
-          dismissHint();
-          if (isMobile) {
-            const touch = event.touches[0];
-            if (!touch) {
-              return;
-            }
-            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-            return;
-          }
-          beginDragState();
-        }}
-        onTouchEnd={(event) => {
-          if (isMobile) {
-            const start = touchStartRef.current;
-            const touch = event.changedTouches[0];
-            touchStartRef.current = null;
-            if (!start || !touch) {
-              return;
-            }
-
-            const dx = touch.clientX - start.x;
-            const dy = touch.clientY - start.y;
-
-            if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy)) {
-              if (dx < 0) {
-                onSelectIndex(nextIndex);
-              } else {
-                onSelectIndex(prevIndex);
-              }
-            }
-            return;
-          }
-          endDragStateSoon(120);
-        }}
-        onTouchCancel={() => {
-          if (isMobile) {
-            touchStartRef.current = null;
-            return;
-          }
           endDragStateSoon(120);
         }}
         onKeyDown={(event) => {

@@ -1273,6 +1273,7 @@ input {
 
   .ring-cover.mobile-simple .ring-cover-card {
     cursor: default;
+    touch-action: pan-y;
   }
 }
 
