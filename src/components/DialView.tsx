@@ -645,13 +645,17 @@ export default function DialView({
         return;
       }
 
+      const target = event.target as HTMLElement | null;
+      if (target?.closest(".dial-center-card")) {
+        return;
+      }
+
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
         animationFrameRef.current = null;
       }
 
       pointerIdRef.current = event.pointerId;
-      const target = event.target as HTMLElement | null;
       pointerDownFragranceNameRef.current =
         target
           ?.closest<HTMLButtonElement>("[data-fragrance-name]")

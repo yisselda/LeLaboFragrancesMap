@@ -49,24 +49,26 @@ input {
 
 /* Header */
 .header {
-  padding: 20px 32px;
+  padding: 10px 18px 8px;
   border-bottom: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.92);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(4px);
 }
 
 .header-title {
-  font-size: 14px;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.25em;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
+  opacity: 0.88;
 }
 
 .header-disclaimer {
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  color: var(--color-muted);
-  margin-top: 4px;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: #8a847f;
+  margin-top: 2px;
+  opacity: 0.72;
 }
 
 /* App layout */
@@ -76,35 +78,39 @@ input {
   display: flex;
   flex-direction: column;
   min-height: 0;
+  position: relative;
 }
 
 .view-toolbar {
-  display: flex;
-  justify-content: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--color-border);
-  background: rgba(255, 255, 255, 0.72);
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  z-index: 8;
+  padding: 0;
+  background: transparent;
+  border: none;
 }
 
 .view-toggle {
   display: inline-flex;
-  padding: 4px;
-  border: 1px solid var(--color-border);
-  background: rgba(245, 240, 235, 0.7);
+  padding: 3px;
+  border: 1px solid rgba(132, 116, 99, 0.3);
+  background: rgba(247, 241, 234, 0.88);
   border-radius: 999px;
-  gap: 4px;
+  gap: 3px;
+  box-shadow: 0 1px 4px rgba(20, 16, 12, 0.08);
 }
 
 .view-toggle-button {
   border: none;
   background: transparent;
-  padding: 8px 18px;
+  padding: 6px 12px;
   border-radius: 999px;
-  font-size: 11px;
-  letter-spacing: 0.12em;
+  font-size: 10px;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--color-muted);
-  min-height: 36px;
+  color: #6d6761;
+  min-height: 30px;
   cursor: pointer;
   transition: color 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
@@ -112,7 +118,7 @@ input {
 .view-toggle-button.active {
   color: var(--color-text);
   background: var(--color-white);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
 .view-toggle-button:focus-visible,
@@ -241,7 +247,8 @@ input {
   flex-direction: column;
   align-items: center;
   gap: 14px;
-  padding: clamp(14px, 3vw, 26px);
+  padding: clamp(42px, 6vw, 54px) clamp(14px, 3vw, 26px)
+    clamp(14px, 3vw, 26px);
   overflow: auto;
 }
 
@@ -586,15 +593,30 @@ input {
 
 @media (max-width: 720px) {
   .header {
-    padding: 16px 18px;
+    padding: 8px 12px 6px;
+  }
+
+  .header-disclaimer {
+    display: none;
   }
 
   .view-toolbar {
-    padding: 10px 12px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .view-toggle {
+    padding: 2px;
+  }
+
+  .view-toggle-button {
+    min-height: 28px;
+    padding: 5px 10px;
+    font-size: 9px;
   }
 
   .dial-view {
-    padding: 12px;
+    padding: 44px 12px 12px;
     gap: 12px;
   }
 
