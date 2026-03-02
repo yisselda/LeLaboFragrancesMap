@@ -489,14 +489,6 @@ export default function RingCoverCarousel({
           Swipe
         </button>
       )}
-      <img
-        className="ring-mobile-bottles"
-        src={`${import.meta.env.BASE_URL}icons/bottles.png`}
-        alt=""
-        aria-hidden="true"
-        loading="lazy"
-        decoding="async"
-      />
     </section>
   );
 }
