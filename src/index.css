@@ -1259,17 +1259,20 @@ input {
   .ring-cover-column::after {
     display: none;
   }
+}
 
-  .ring-cover-track.is-dragging .ring-cover-card[data-active="false"] {
-    opacity: 0.74;
-    filter: blur(0.9px);
-    transform: scale(0.992);
+@media (max-width: 768px) {
+  .ring-cover.mobile-simple .ring-cover-viewport {
+    overflow-x: hidden;
+    touch-action: pan-y;
   }
 
-  .ring-cover-track.is-dragging .ring-cover-card[data-active="true"] {
-    opacity: 0.9;
-    filter: blur(0.3px);
-    transform: scale(0.997);
+  .ring-cover.mobile-simple .ring-cover-track {
+    gap: 0;
+  }
+
+  .ring-cover.mobile-simple .ring-cover-card {
+    cursor: default;
   }
 }
 
@@ -1453,20 +1456,6 @@ input {
 
   .ring-cover-meta {
     margin-top: 8px;
-  }
-}
-
-@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
-  .ring-cover-track.is-dragging .ring-cover-card[data-active="false"] {
-    opacity: 0.8;
-    filter: none;
-    transform: scale(1);
-  }
-
-  .ring-cover-track.is-dragging .ring-cover-card[data-active="true"] {
-    opacity: 0.94;
-    filter: none;
-    transform: scale(1);
   }
 }
 

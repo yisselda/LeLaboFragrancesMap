@@ -46,9 +46,17 @@ export default function RingCoverCarousel({
     y: number;
     handled: boolean;
   } | null>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
   const suppressCardClickRef = useRef(false);
   const suppressClickTimerRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+
+    return window.matchMedia("(max-width: 768px)").matches;
+  });
   const [showHint, setShowHint] = useState(() => {
     if (typeof window === "undefined") {
       return false;
@@ -66,12 +74,28 @@ export default function RingCoverCarousel({
   const prevIndex = modIndex(safeSelectedIndex - 1, total);
   const nextIndex = modIndex(safeSelectedIndex + 1, total);
 
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+    const update = (event: MediaQueryListEvent) => {
+      setIsMobile(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", update);
+    return () => {
+      mediaQuery.removeEventListener("change", update);
+    };
+  }, []);
+
   const cards = useMemo<CoverCard[]>(() => {
     if (total === 0) {
       return [];
     }
 
-    if (total === 1) {
+    if (total === 1 || isMobile) {
       const current = fragrances[safeSelectedIndex];
       return [
         {
@@ -103,7 +127,7 @@ export default function RingCoverCarousel({
         absoluteIndex: nextIndex,
       },
     ];
-  }, [fragrances, nextIndex, prevIndex, safeSelectedIndex, total]);
+  }, [fragrances, isMobile, nextIndex, prevIndex, safeSelectedIndex, total]);
 
   const dismissHint = useCallback(() => {
     setShowHint(false);
@@ -164,7 +188,7 @@ export default function RingCoverCarousel({
   }, [beginDragState]);
 
   useEffect(() => {
-    if (cards.length === 0 || !viewportRef.current) {
+    if (isMobile || cards.length === 0 || !viewportRef.current) {
       return;
     }
 
@@ -175,7 +199,7 @@ export default function RingCoverCarousel({
       block: "nearest",
       inline: "center",
     });
-  }, [cards]);
+  }, [cards, isMobile]);
 
   const settleSelection = useCallback(() => {
     const viewport = viewportRef.current;
@@ -239,7 +263,10 @@ export default function RingCoverCarousel({
 
   const activeCardIndex = cards.findIndex((card) => card.kind === "current");
   return (
-    <section className="ring-cover" aria-label="City fragrance carousel">
+    <section
+      className={`ring-cover${isMobile ? " mobile-simple" : ""}`}
+      aria-label="City fragrance carousel"
+    >
       <button
         type="button"
         className="ringNavBtn ringNavBtnPrev leftArrowIcon"
@@ -255,10 +282,16 @@ export default function RingCoverCarousel({
         tabIndex={0}
         aria-label="Swipe left or right to change city"
         onScroll={() => {
+          if (isMobile) {
+            return;
+          }
           scheduleSettle();
           markScrollDragging();
         }}
         onPointerDown={(event) => {
+          if (isMobile) {
+            return;
+          }
           dismissHint();
           beginDragState();
           swipeStartRef.current = {
@@ -269,6 +302,9 @@ export default function RingCoverCarousel({
           };
         }}
         onPointerMove={(event) => {
+          if (isMobile) {
+            return;
+          }
           const start = swipeStartRef.current;
           if (!start || start.pointerId !== event.pointerId || start.handled) {
             return;
@@ -291,6 +327,9 @@ export default function RingCoverCarousel({
           }
         }}
         onPointerUp={(event) => {
+          if (isMobile) {
+            return;
+          }
           const start = swipeStartRef.current;
           if (!start || start.pointerId !== event.pointerId) {
             endDragStateSoon(120);
@@ -315,17 +354,52 @@ export default function RingCoverCarousel({
           endDragStateSoon(120);
         }}
         onPointerCancel={() => {
+          if (isMobile) {
+            return;
+          }
           swipeStartRef.current = null;
           endDragStateSoon(120);
         }}
-        onTouchStart={() => {
+        onTouchStart={(event) => {
           dismissHint();
+          if (isMobile) {
+            const touch = event.touches[0];
+            if (!touch) {
+              return;
+            }
+            touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+            return;
+          }
           beginDragState();
         }}
-        onTouchEnd={() => {
+        onTouchEnd={(event) => {
+          if (isMobile) {
+            const start = touchStartRef.current;
+            const touch = event.changedTouches[0];
+            touchStartRef.current = null;
+            if (!start || !touch) {
+              return;
+            }
+
+            const dx = touch.clientX - start.x;
+            const dy = touch.clientY - start.y;
+
+            if (Math.abs(dx) >= 48 && Math.abs(dx) > Math.abs(dy)) {
+              if (dx < 0) {
+                onSelectIndex(nextIndex);
+              } else {
+                onSelectIndex(prevIndex);
+              }
+            }
+            return;
+          }
           endDragStateSoon(120);
         }}
         onTouchCancel={() => {
+          if (isMobile) {
+            touchStartRef.current = null;
+            return;
+          }
           endDragStateSoon(120);
         }}
         onKeyDown={(event) => {
