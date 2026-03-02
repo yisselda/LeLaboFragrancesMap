@@ -3,9 +3,9 @@
 _An independent catalog of Le Labo City Exclusives._
 
 This project looks at City Exclusives through place first, then scent.  
-Each entry links a city to its fragrance in a clean, direct way.  
-The interface stays minimal so the relationship is easy to read.  
-It is meant for browsing, not shopping.
+Each entry links a city to its fragrance in a clean, direct way.
+
+It is meant for daydreaming, not shopping.
 
 ---
 
@@ -13,8 +13,6 @@ It is meant for browsing, not shopping.
 
 I built this because I am drawn to what makes a place unique.  
 When I travel, I pay attention to details that do not translate elsewhere.  
-City Exclusives carry that same quality.  
-This project is a simple way to explore that connection between city and fragrance.
 
 ---
 
@@ -25,7 +23,7 @@ This project is a simple way to explore that connection between city and fragran
 - Sqr
 - Map
 
-Each offering a different way to explore the relationship between city and scent.
+Each offering a different way to explore the relationship between city and scent. I guess.
 
 ---
 
