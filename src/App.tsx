@@ -13,7 +13,7 @@ export default function App() {
   const [selectedFragrance, setSelectedFragrance] = useState<Fragrance | null>(
     null
   );
-  const [viewMode, setViewMode] = useState<"dial" | "list">("list");
+  const [viewMode, setViewMode] = useState<"dial" | "list">("dial");
 
   useEffect(() => {
     fetch(import.meta.env.BASE_URL + "data/fragrances.json")
