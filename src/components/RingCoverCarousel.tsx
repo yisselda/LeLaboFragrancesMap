@@ -164,18 +164,6 @@ export default function RingCoverCarousel({
 
   return (
     <section className="ring-cover" aria-label="City fragrance carousel">
-      <button
-        type="button"
-        className="ring-cover-nav ring-cover-nav-prev"
-        onClick={() => {
-          dismissHint();
-          onSelectIndex(prevIndex);
-        }}
-        aria-label="Previous city"
-      >
-        &lsaquo;
-      </button>
-
       <div
         className="ring-cover-viewport"
         ref={viewportRef}
@@ -215,8 +203,8 @@ export default function RingCoverCarousel({
                 }}
                 aria-live={card.kind === "current" ? "polite" : undefined}
               >
-                <p className="ring-cover-city">{card.fragrance.city}</p>
                 <p className="ring-cover-fragrance">{card.fragrance.name}</p>
+                <p className="ring-cover-city">{card.fragrance.city}</p>
                 <p className="ring-cover-country">{card.fragrance.country}</p>
                 {card.kind === "current" && card.fragrance.tagline && (
                   <p className="ring-cover-tagline">{card.fragrance.tagline}</p>
@@ -250,32 +238,11 @@ export default function RingCoverCarousel({
         </div>
       </div>
 
-      <button
-        type="button"
-        className="ring-cover-nav ring-cover-nav-next"
-        onClick={() => {
-          dismissHint();
-          onSelectIndex(nextIndex);
-        }}
-        aria-label="Next city"
-      >
-        &rsaquo;
-      </button>
-
       {showHint && (
         <button type="button" className="ring-cover-hint" onClick={dismissHint}>
           Swipe
         </button>
       )}
-
-      <div className="ring-cover-dots" aria-hidden="true">
-        {fragrances.map((fragrance, index) => (
-          <span
-            key={fragrance.city}
-            className={`ring-cover-dot ${index === safeSelectedIndex ? "active" : ""}`}
-          />
-        ))}
-      </div>
     </section>
   );
 }

@@ -28,6 +28,13 @@
   --chipBgSelected: rgba(255, 255, 255, 0.94);
   --borderSubtle: rgba(135, 125, 115, 0.24);
   --shadowSoft: 0 10px 28px rgba(18, 15, 12, 0.09);
+  --ring-card-max-w: 780px;
+  --ring-card-w: min(92vw, var(--ring-card-max-w));
+  --ring-card-pad-y: clamp(28px, 4vw, 48px);
+  --ring-card-pad-x: clamp(22px, 4.7vw, 56px);
+  --ring-card-radius: clamp(22px, 2.2vw, 26px);
+  --ring-card-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  --ring-muted-opacity: 0.62;
 
   /* Legacy aliases */
   --color-text: var(--ink);
@@ -171,7 +178,6 @@ input {
 .ring-chip:focus-visible,
 .ring-cover-link:focus-visible,
 .ring-cover-viewport:focus-visible,
-.ring-cover-nav:focus-visible,
 .ring-cover-hint:focus-visible,
 .sidebar-search:focus-visible,
 .dial-stage:focus-visible,
@@ -294,39 +300,39 @@ input {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(14px, 2vw, 20px);
+  gap: clamp(12px, 1.8vw, 18px);
   padding: clamp(40px, 5vw, 52px) clamp(12px, 3vw, 28px)
     clamp(18px, 3vw, 30px);
   overflow: auto;
 }
 
 .ring-search-wrap {
-  width: min(100%, 760px);
+  width: min(100%, 700px);
 }
 
 .ring-search-input {
   width: 100%;
   min-height: 44px;
-  border: 1px solid var(--borderSubtle);
+  border: 1px solid rgba(136, 126, 116, 0.18);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.7);
   color: var(--text);
-  padding: 10px 14px;
-  letter-spacing: 0.08em;
-  font-size: var(--type-sm);
+  padding: 10px 16px;
+  letter-spacing: 0.07em;
+  font-size: 11px;
   transition: border-color 0.22s ease, background-color 0.22s ease;
 }
 
 .ring-search-input::placeholder {
-  color: #8f8880;
+  color: rgba(110, 102, 94, 0.72);
 }
 
 .ring-search-input:hover {
-  border-color: rgba(130, 121, 112, 0.34);
+  border-color: rgba(130, 121, 112, 0.26);
 }
 
 .ring-chip-row-shell {
-  width: min(100%, 900px);
+  width: min(100%, 880px);
 }
 
 .ring-chip-row {
@@ -337,21 +343,14 @@ input {
   overflow-y: hidden;
   scroll-behavior: smooth;
   padding: 2px 4px 2px;
-  scrollbar-width: thin;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
 }
 
 .ring-chip-row::-webkit-scrollbar {
-  height: 5px;
-}
-
-.ring-chip-row::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.ring-chip-row::-webkit-scrollbar-thumb {
-  background: rgba(120, 109, 99, 0.35);
-  border-radius: 999px;
+  display: none;
+  height: 0;
 }
 
 .ring-chip-wrap {
@@ -362,11 +361,11 @@ input {
   min-height: 44px;
   border: none;
   border-radius: 999px;
-  padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.56);
-  color: #6c655e;
-  letter-spacing: 0.08em;
-  font-size: var(--type-sm);
+  padding: 10px 13px;
+  background: rgba(255, 255, 255, 0.48);
+  color: rgba(67, 59, 52, 0.7);
+  letter-spacing: 0.07em;
+  font-size: 9px;
   white-space: nowrap;
   cursor: pointer;
   transition: background-color 0.22s ease, color 0.22s ease,
@@ -374,22 +373,22 @@ input {
 }
 
 .ring-chip.compact {
-  min-height: 40px;
-  padding: 8px 12px;
+  min-height: 44px;
+  padding: 10px 12px;
   font-size: 9px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
 }
 
 .ring-chip:hover {
-  background: rgba(255, 255, 255, 0.74);
-  color: #2f2a25;
+  background: rgba(255, 255, 255, 0.62);
+  color: rgba(42, 36, 31, 0.9);
 }
 
 .ring-chip.selected {
-  background: rgba(255, 255, 255, 0.88);
-  color: var(--text);
-  box-shadow: 0 7px 18px rgba(22, 18, 14, 0.08);
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.76);
+  color: rgba(24, 20, 16, 0.94);
+  box-shadow: 0 6px 14px rgba(22, 18, 14, 0.06);
+  font-weight: 550;
 }
 
 .ring-empty-state {
@@ -405,7 +404,7 @@ input {
 .ring-cover {
   width: min(100%, 980px);
   position: relative;
-  padding-bottom: 18px;
+  padding-bottom: 10px;
 }
 
 .ring-cover-viewport {
@@ -424,17 +423,17 @@ input {
 .ring-cover-track {
   display: flex;
   justify-content: center;
-  gap: clamp(10px, 2vw, 18px);
+  gap: clamp(10px, 1.8vw, 16px);
   padding: 0 clamp(10px, 2.5vw, 16px);
 }
 
 .ring-cover-card {
-  flex: 0 0 min(78vw, 560px);
+  flex: 0 0 var(--ring-card-w);
   scroll-snap-align: center;
-  border-radius: 16px;
+  border-radius: var(--ring-card-radius);
   background: rgba(255, 255, 255, 0.84);
-  box-shadow: 0 14px 28px rgba(17, 14, 11, 0.09);
-  padding: clamp(16px, 3.2vw, 30px);
+  box-shadow: var(--ring-card-shadow);
+  padding: var(--ring-card-pad-y) var(--ring-card-pad-x);
   transition: transform 0.24s ease, opacity 0.24s ease, filter 0.24s ease,
     color 0.24s ease;
   cursor: pointer;
@@ -449,61 +448,69 @@ input {
 
 .ring-cover-card.prev,
 .ring-cover-card.next {
-  opacity: 0.64;
+  opacity: 0.58;
   transform: scale(0.9);
   filter: none;
-  color: #645f58;
+  color: rgba(58, 50, 43, 0.62);
+}
+
+.ring-cover-card.prev {
+  text-align: right;
 }
 
 .ring-cover-city {
-  font-size: clamp(24px, 3.8vw, 42px);
-  line-height: 1.05;
-  letter-spacing: 0.02em;
-  font-weight: 600;
+  font-size: clamp(30px, 4.2vw, 42px);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+  color: rgba(29, 24, 20, 0.9);
   margin-bottom: 8px;
 }
 
 .ring-cover-fragrance {
-  font-size: clamp(14px, 1.8vw, 20px);
-  letter-spacing: 0.12em;
+  font-size: clamp(22px, 3.2vw, 32px);
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: inherit;
-  margin-bottom: 6px;
+  color: var(--text);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 8px;
 }
 
 .ring-cover-country {
-  font-size: var(--type-sm);
-  letter-spacing: 0.11em;
+  font-size: clamp(12px, 1.2vw, 14px);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #79726a;
-  margin-bottom: 10px;
+  color: rgba(72, 64, 57, var(--ring-muted-opacity));
+  margin-bottom: 16px;
 }
 
 .ring-cover-tagline {
-  font-size: var(--type-md);
-  color: var(--muted);
+  font-size: clamp(14px, 1.4vw, 16px);
+  color: rgba(69, 62, 55, 0.85);
   font-style: italic;
   margin-bottom: 8px;
-  line-height: 1.38;
+  line-height: 1.4;
 }
 
 .ring-cover-notes {
-  font-size: var(--type-sm);
-  color: #6f6760;
-  letter-spacing: 0.03em;
+  font-size: clamp(12px, 1.25vw, 14px);
+  color: rgba(73, 66, 59, 0.62);
+  letter-spacing: 0.02em;
   line-height: 1.45;
-  margin-bottom: 12px;
+  margin-bottom: 24px;
 }
 
 .ring-cover-link {
   display: inline-block;
-  font-size: var(--type-sm);
+  font-size: clamp(11px, 1vw, 12px);
   letter-spacing: 0.09em;
   text-transform: uppercase;
   color: var(--text);
   text-decoration: none;
-  border-bottom: 1px solid rgba(95, 86, 79, 0.54);
+  border-bottom: 1px solid rgba(95, 86, 79, 0.46);
   padding-bottom: 1px;
+  margin-top: 0;
   transition: border-color 0.2s ease, color 0.2s ease;
 }
 
@@ -513,40 +520,10 @@ input {
 }
 
 .ring-cover-meta {
-  margin-top: 12px;
-  font-size: var(--type-sm);
-  letter-spacing: 0.08em;
-  color: #716a63;
-}
-
-.ring-cover-nav {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 34px;
-  height: 34px;
-  border: none;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.78);
-  color: #6d6660;
-  font-size: 20px;
-  line-height: 1;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
-  z-index: 2;
-}
-
-.ring-cover-nav:hover {
-  background: rgba(255, 255, 255, 0.96);
-  color: #221d19;
-}
-
-.ring-cover-nav-prev {
-  left: 2px;
-}
-
-.ring-cover-nav-next {
-  right: 2px;
+  margin-top: 14px;
+  font-size: clamp(10px, 0.95vw, 11px);
+  letter-spacing: 0.07em;
+  color: rgba(90, 82, 74, 0.74);
 }
 
 .ring-cover-hint {
@@ -562,24 +539,6 @@ input {
   border-radius: 999px;
   padding: 3px 8px;
   cursor: pointer;
-}
-
-.ring-cover-dots {
-  margin-top: 8px;
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-}
-
-.ring-cover-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 999px;
-  background: rgba(120, 112, 104, 0.36);
-}
-
-.ring-cover-dot.active {
-  background: rgba(36, 32, 29, 0.8);
 }
 
 /* Dial view */
@@ -952,7 +911,7 @@ input {
 @media (min-width: 721px) {
   .ring-cover-card.prev,
   .ring-cover-card.next {
-    filter: blur(0.8px);
+    filter: blur(0.45px);
   }
 }
 
@@ -990,30 +949,27 @@ input {
     gap: 12px;
   }
 
-  .ring-cover-nav {
-    display: none;
-  }
-
   .ring-chip-row {
     gap: 8px;
     padding: 2px 2px 4px;
   }
 
   .ring-chip {
+    min-height: 44px;
     padding: 10px 12px;
     max-width: 74vw;
   }
 
   .ring-chip.compact {
-    min-height: 38px;
-    padding: 8px 10px;
+    min-height: 44px;
+    padding: 10px 11px;
     max-width: 72vw;
   }
 
   .ring-cover-card {
     flex-basis: min(86vw, 420px);
-    border-radius: 14px;
-    padding: 16px 14px;
+    border-radius: 22px;
+    padding: 28px 22px;
   }
 
   .ring-cover-hint {
@@ -1035,6 +991,35 @@ input {
   }
 }
 
+@media (max-width: 640px) {
+  .ring-cover-card {
+    flex-basis: min(88vw, 390px);
+    padding: clamp(28px, 8vw, 32px) clamp(22px, 6.1vw, 24px);
+  }
+
+  .ring-cover-fragrance {
+    font-size: clamp(22px, 6.4vw, 26px);
+  }
+
+  .ring-cover-city {
+    font-size: clamp(30px, 8.4vw, 34px);
+    line-height: 1.08;
+  }
+
+  .ring-cover-country {
+    font-size: 12px;
+    margin-bottom: 16px;
+  }
+
+  .ring-cover-tagline {
+    font-size: 14px;
+  }
+
+  .ring-cover-notes {
+    font-size: 12px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .view-toggle-button,
   .city-pill,
@@ -1044,7 +1029,6 @@ input {
   .ring-search-input,
   .ring-chip,
   .ring-cover-link,
-  .ring-cover-nav,
   .ring-cover-card,
   .ring-cover-hint {
     transition: none;
