@@ -45,6 +45,11 @@ interface StageBounds {
   height: number;
 }
 
+interface ElementSize {
+  width: number;
+  height: number;
+}
+
 const TAU = Math.PI * 2;
 const OUTER_RING_COUNT = 14;
 const HINT_DISMISS_KEY = "le-labo-dial-hint-dismissed";
@@ -219,6 +224,37 @@ function pointOnRoundedRectPath(path: RectPath, rawProgress: number) {
   };
 }
 
+function keepPointOutsideRect(
+  point: { x: number; y: number },
+  centerX: number,
+  centerY: number,
+  halfWidth: number,
+  halfHeight: number
+) {
+  const dx = point.x - centerX;
+  const dy = point.y - centerY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+
+  if (absDx >= halfWidth || absDy >= halfHeight) {
+    return point;
+  }
+
+  const xRatio = halfWidth > 0 ? absDx / halfWidth : 0;
+  const yRatio = halfHeight > 0 ? absDy / halfHeight : 0;
+  const dominantRatio = Math.max(xRatio, yRatio);
+
+  if (dominantRatio <= 0) {
+    return { x: centerX + halfWidth, y: centerY };
+  }
+
+  const scale = (1 / dominantRatio) * 1.04;
+  return {
+    x: centerX + dx * scale,
+    y: centerY + dy * scale,
+  };
+}
+
 export default function DialView({
   fragrances,
   selectedFragrance,
@@ -283,11 +319,16 @@ export default function DialView({
     width: 0,
     height: 0,
   });
+  const [centerCardBounds, setCenterCardBounds] = useState<ElementSize>({
+    width: 0,
+    height: 0,
+  });
 
   const animationFrameRef = useRef<number | null>(null);
   const dragFrameRef = useRef<number | null>(null);
   const pendingDragOffsetRef = useRef<number | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const centerCardRef = useRef<HTMLElement | null>(null);
 
   const pointerIdRef = useRef<number | null>(null);
   const pointerDownFragranceNameRef = useRef<string | null>(null);
@@ -308,6 +349,24 @@ export default function DialView({
 
   const stageWidth = stageBounds.width || 920;
   const stageHeight = stageBounds.height || 620;
+  const stageCenterX = stageWidth / 2;
+  const stageCenterY = stageHeight / 2;
+  const isCompactStage = stageWidth <= 720;
+
+  const fallbackCardWidth = Math.min(
+    stageWidth * (isCompactStage ? 0.74 : 0.64),
+    isCompactStage ? 360 : 520
+  );
+  const fallbackCardHeight = isCompactStage ? 260 : 230;
+  const centerCardWidth = centerCardBounds.width || fallbackCardWidth;
+  const centerCardHeight = centerCardBounds.height || fallbackCardHeight;
+
+  const pillHalfWidth = isCompactStage ? 78 : 94;
+  const pillHalfHeight = 28;
+  const centerClearanceX = centerCardWidth / 2 + pillHalfWidth + 14;
+  const centerClearanceY = centerCardHeight / 2 + pillHalfHeight + 14;
+  const edgePaddingX = pillHalfWidth + 6;
+  const edgePaddingY = pillHalfHeight + 6;
 
   const outerPath = useMemo(() => {
     const padX = clamp(stageWidth * 0.06, 24, 86);
@@ -345,14 +404,34 @@ export default function DialView({
           path,
           node.baseProgress + rotationOffset
         );
+        const adjustedPoint = keepPointOutsideRect(
+          point,
+          stageCenterX,
+          stageCenterY,
+          centerClearanceX,
+          centerClearanceY
+        );
 
         return {
           ...node,
-          x: point.x,
-          y: point.y,
+          x: clamp(adjustedPoint.x, edgePaddingX, stageWidth - edgePaddingX),
+          y: clamp(adjustedPoint.y, edgePaddingY, stageHeight - edgePaddingY),
         };
       }),
-    [innerPath, nodes, outerPath, rotationOffset]
+    [
+      centerClearanceX,
+      centerClearanceY,
+      edgePaddingX,
+      edgePaddingY,
+      innerPath,
+      nodes,
+      outerPath,
+      rotationOffset,
+      stageCenterX,
+      stageCenterY,
+      stageHeight,
+      stageWidth,
+    ]
   );
 
   const matchingNameSet = useMemo(() => {
@@ -730,6 +809,39 @@ export default function DialView({
   }, []);
 
   useEffect(() => {
+    const centerCard = centerCardRef.current;
+    if (!centerCard) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) {
+        return;
+      }
+
+      setCenterCardBounds((current) => {
+        const next = {
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        };
+
+        if (
+          Math.abs(current.width - next.width) < 0.5 &&
+          Math.abs(current.height - next.height) < 0.5
+        ) {
+          return current;
+        }
+
+        return next;
+      });
+    });
+
+    resizeObserver.observe(centerCard);
+    return () => resizeObserver.disconnect();
+  }, []);
+
+  useEffect(() => {
     return () => {
       if (animationFrameRef.current !== null) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -802,7 +914,7 @@ export default function DialView({
           })}
 
           <div className="dial-center-wrap">
-            <CenterCard fragrance={selectedFragrance} />
+            <CenterCard ref={centerCardRef} fragrance={selectedFragrance} />
           </div>
         </div>
       </div>

@@ -1,20 +1,24 @@
+import { forwardRef } from "react";
 import type { Fragrance } from "../types/fragrance";
 
 interface CenterCardProps {
   fragrance: Fragrance | null;
 }
 
-export default function CenterCard({ fragrance }: CenterCardProps) {
+const CenterCard = forwardRef<HTMLElement, CenterCardProps>(function CenterCard(
+  { fragrance },
+  ref
+) {
   if (!fragrance) {
     return (
-      <article className="dial-center-card" aria-live="polite">
+      <article ref={ref} className="dial-center-card" aria-live="polite">
         <p className="dial-center-empty">Select a city to explore</p>
       </article>
     );
   }
 
   return (
-    <article className="dial-center-card" aria-live="polite">
+    <article ref={ref} className="dial-center-card" aria-live="polite">
       <p className="dial-center-name">{fragrance.name}</p>
       {fragrance.tagline && (
         <p className="dial-center-tagline">{fragrance.tagline}</p>
@@ -34,4 +38,6 @@ export default function CenterCard({ fragrance }: CenterCardProps) {
       </a>
     </article>
   );
-}
+});
+
+export default CenterCard;
