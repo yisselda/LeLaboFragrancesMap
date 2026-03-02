@@ -3,18 +3,19 @@ import Header from "./components/Header";
 import DialView from "./components/DialView";
 import Map from "./components/Map";
 import RingView from "./components/RingView";
+import SqrView from "./components/SqrView";
 import Sidebar from "./components/Sidebar";
 import ViewToggle from "./components/ViewToggle";
 import type { Fragrance } from "./types/fragrance";
 
-type ViewMode = "ring" | "dial" | "map";
+type ViewMode = "ring" | "dial" | "sqr" | "map";
 
 const VIEW_STORAGE_KEY = "le-labo-view";
 const CITY_STORAGE_KEY = "le-labo-city";
 const DEFAULT_VIEW: ViewMode = "dial";
 
 function parseView(value: string | null): ViewMode | null {
-  if (value === "ring" || value === "dial" || value === "map") {
+  if (value === "ring" || value === "dial" || value === "sqr" || value === "map") {
     return value;
   }
   return null;
@@ -167,6 +168,12 @@ export default function App() {
             />
           ) : viewMode === "dial" ? (
             <DialView
+              fragrances={fragrances}
+              selectedFragrance={selectedFragrance}
+              onSelectFragrance={setSelectedFragrance}
+            />
+          ) : viewMode === "sqr" ? (
+            <SqrView
               fragrances={fragrances}
               selectedFragrance={selectedFragrance}
               onSelectFragrance={setSelectedFragrance}

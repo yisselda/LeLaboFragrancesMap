@@ -181,7 +181,9 @@ input {
 .ring-cover-hint:focus-visible,
 .sidebar-search:focus-visible,
 .dial-stage:focus-visible,
-.dial-hint:focus-visible {
+.dial-hint:focus-visible,
+.sqr-stage:focus-visible,
+.sqr-hint:focus-visible {
   outline: 2px solid #1a1714;
   outline-offset: 2px;
 }
@@ -539,6 +541,96 @@ input {
   border-radius: 999px;
   padding: 3px 8px;
   cursor: pointer;
+}
+
+/* Sqr view */
+.sqr-view {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: clamp(40px, 5vw, 48px) clamp(14px, 3vw, 24px)
+    clamp(12px, 3vw, 22px);
+  overflow: auto;
+}
+
+.sqr-search-wrap {
+  width: min(100%, 760px);
+}
+
+.sqr-stage-shell {
+  width: min(100%, 980px);
+  flex: 1;
+  min-height: 420px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.sqr-hint {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(246, 244, 239, 0.94);
+  color: var(--ink-muted);
+  padding: 5px 8px;
+  letter-spacing: var(--tracking-tight);
+  text-transform: uppercase;
+  font-size: var(--type-xs);
+  z-index: 3;
+  cursor: pointer;
+}
+
+.sqr-stage {
+  position: relative;
+  width: 100%;
+  height: clamp(430px, 72dvh, 760px);
+  border: none;
+  border-radius: 0;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(255, 255, 255, 0.38) 0%,
+    rgba(246, 244, 239, 0) 68%
+  );
+  touch-action: none;
+  user-select: none;
+}
+
+.sqr-stage.dragging {
+  cursor: grabbing;
+}
+
+.sqr-orbit-guide {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  border: 1px solid var(--dial-guide-border);
+  border-radius: 22px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.sqr-orbit-guide.outer {
+  width: var(--sqr-outer-width);
+  height: var(--sqr-outer-height);
+}
+
+.sqr-orbit-guide.inner {
+  width: var(--sqr-inner-width);
+  height: var(--sqr-inner-height);
+  border-radius: 18px;
+}
+
+.sqr-center-wrap {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
 }
 
 /* Dial view */
@@ -951,6 +1043,11 @@ input {
     gap: 12px;
   }
 
+  .sqr-view {
+    padding: 42px 12px 12px;
+    gap: 12px;
+  }
+
   .ring-view {
     padding: 32px 10px 12px;
     gap: 8px;
@@ -1020,6 +1117,19 @@ input {
     right: 6px;
   }
 
+  .sqr-stage-shell {
+    min-height: 400px;
+  }
+
+  .sqr-stage {
+    height: clamp(420px, 66dvh, 620px);
+  }
+
+  .sqr-hint {
+    top: 8px;
+    right: 8px;
+  }
+
   .dial-stage {
     height: clamp(420px, 66dvh, 620px);
   }
@@ -1081,7 +1191,8 @@ input {
   .ring-chip,
   .ring-cover-link,
   .ring-cover-card,
-  .ring-cover-hint {
+  .ring-cover-hint,
+  .sqr-hint {
     transition: none;
   }
 }

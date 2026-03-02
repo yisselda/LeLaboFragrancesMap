@@ -1,6 +1,6 @@
 interface ViewToggleProps {
-  value: "ring" | "dial" | "map";
-  onChange: (value: "ring" | "dial" | "map") => void;
+  value: "ring" | "dial" | "sqr" | "map";
+  onChange: (value: "ring" | "dial" | "sqr" | "map") => void;
 }
 
 export default function ViewToggle({ value, onChange }: ViewToggleProps) {
@@ -23,6 +23,15 @@ export default function ViewToggle({ value, onChange }: ViewToggleProps) {
         onClick={() => onChange("dial")}
       >
         Dial
+      </button>
+      <button
+        type="button"
+        role="tab"
+        aria-selected={value === "sqr"}
+        className={`view-toggle-button ${value === "sqr" ? "active" : ""}`}
+        onClick={() => onChange("sqr")}
+      >
+        Sqr
       </button>
       <button
         type="button"
