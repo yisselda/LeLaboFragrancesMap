@@ -34,6 +34,8 @@ function MapContent({
 }) {
   const map = useMap();
   const markersRef = useRef<Record<string, CircleMarkerType>>({});
+  const lastSelectedNameRef = useRef<string | null>(null);
+  const hasHandledInitialSelectionRef = useRef(false);
 
   useEffect(() => {
     if (!selectedFragrance) return;
@@ -41,13 +43,32 @@ function MapContent({
     const marker = markersRef.current[selectedFragrance.name];
     if (!marker) return;
 
-    map.flyTo([selectedFragrance.lat, selectedFragrance.lng], 10, {
-      duration: 1.5,
+    const didSelectionChange =
+      lastSelectedNameRef.current !== selectedFragrance.name;
+    lastSelectedNameRef.current = selectedFragrance.name;
+
+    if (!didSelectionChange) {
+      return;
+    }
+
+    const openPopupTimeout = window.setTimeout(() => {
+      marker.openPopup();
+    }, 260);
+
+    if (!hasHandledInitialSelectionRef.current) {
+      hasHandledInitialSelectionRef.current = true;
+      return () => window.clearTimeout(openPopupTimeout);
+    }
+
+    const currentZoom = map.getZoom();
+    const targetZoom = currentZoom < 4.5 ? 4.5 : currentZoom;
+
+    map.flyTo([selectedFragrance.lat, selectedFragrance.lng], targetZoom, {
+      duration: 0.9,
+      easeLinearity: 0.3,
     });
 
-    setTimeout(() => {
-      marker.openPopup();
-    }, 500);
+    return () => window.clearTimeout(openPopupTimeout);
   }, [selectedFragrance, map]);
 
   return (
