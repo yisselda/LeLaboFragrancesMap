@@ -11,7 +11,7 @@ It is meant for browsing, not shopping.
 
 ## Purpose
 
-I built this because I am drawn to things that only make sense in a specific place.  
+I built this because I am drawn to what makes a place unique.  
 When I travel, I pay attention to details that do not translate elsewhere.  
 City Exclusives carry that same quality.  
 This project is a simple way to explore that connection between city and fragrance.
