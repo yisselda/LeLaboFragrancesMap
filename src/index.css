@@ -986,13 +986,13 @@ input {
 }
 
 .dial-orbit-guide.outer {
-  width: var(--dial-outer-diameter);
-  height: var(--dial-outer-diameter);
+  width: var(--dial-outer-width);
+  height: var(--dial-outer-height);
 }
 
 .dial-orbit-guide.inner {
-  width: var(--dial-inner-diameter);
-  height: var(--dial-inner-diameter);
+  width: var(--dial-inner-width);
+  height: var(--dial-inner-height);
 }
 
 .city-pill {
@@ -1432,7 +1432,18 @@ input {
   }
 
   .dial-stage {
-    height: clamp(420px, 66dvh, 620px);
+    height: clamp(470px, 74dvh, 700px);
+    border-radius: clamp(120px, 34vw, 220px) / clamp(80px, 22vw, 150px);
+    background: radial-gradient(
+      ellipse at 50% 50%,
+      rgba(255, 255, 255, 0.46) 0%,
+      rgba(246, 244, 239, 0) 70%
+    );
+  }
+
+  .dial-stage-shell {
+    width: 100%;
+    min-height: clamp(460px, 72dvh, 680px);
   }
 
   .city-pill {

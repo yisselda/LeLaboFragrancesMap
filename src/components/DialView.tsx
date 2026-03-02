@@ -174,9 +174,11 @@ export default function DialView({
 
   const edgePaddingX = pillHalfWidth + 8;
   const edgePaddingY = pillHalfHeight + 8;
+  const maxRadiusByBoundsX = Math.max(88, stageWidth / 2 - edgePaddingX);
+  const maxRadiusByBoundsY = Math.max(88, stageHeight / 2 - edgePaddingY);
   const maxRadiusByBounds = Math.max(
     88,
-    Math.min(stageWidth / 2 - edgePaddingX, stageHeight / 2 - edgePaddingY)
+    Math.min(maxRadiusByBoundsX, maxRadiusByBoundsY)
   );
 
   const outerBaseRadius = clamp(
@@ -189,6 +191,18 @@ export default function DialView({
     isCompactStage ? 84 : 126,
     outerBaseRadius - 52
   );
+  const outerBaseRadiusX = isCompactStage
+    ? clamp(maxRadiusByBoundsX * 0.94, 150, maxRadiusByBoundsX)
+    : outerBaseRadius;
+  const outerBaseRadiusY = isCompactStage
+    ? clamp(maxRadiusByBoundsY * 0.93, 136, maxRadiusByBoundsY)
+    : outerBaseRadius;
+  const innerBaseRadiusX = isCompactStage
+    ? clamp(outerBaseRadiusX * 0.68, 92, outerBaseRadiusX - 48)
+    : innerBaseRadius;
+  const innerBaseRadiusY = isCompactStage
+    ? clamp(outerBaseRadiusY * 0.68, 82, outerBaseRadiusY - 44)
+    : innerBaseRadius;
 
   const selectedName = selectedFragrance?.name ?? null;
   const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -196,10 +210,12 @@ export default function DialView({
   const dialStyle = useMemo(
     () =>
       ({
-        "--dial-outer-diameter": `${outerBaseRadius * 2}px`,
-        "--dial-inner-diameter": `${innerBaseRadius * 2}px`,
+        "--dial-outer-width": `${outerBaseRadiusX * 2}px`,
+        "--dial-outer-height": `${outerBaseRadiusY * 2}px`,
+        "--dial-inner-width": `${innerBaseRadiusX * 2}px`,
+        "--dial-inner-height": `${innerBaseRadiusY * 2}px`,
       }) as CSSProperties,
-    [innerBaseRadius, outerBaseRadius]
+    [innerBaseRadiusX, innerBaseRadiusY, outerBaseRadiusX, outerBaseRadiusY]
   );
 
   const positionedNodes = useMemo(
@@ -211,24 +227,31 @@ export default function DialView({
         const absCos = Math.max(Math.abs(cos), 0.0001);
         const absSin = Math.max(Math.abs(sin), 0.0001);
 
-        const baseRadius = node.ring === "outer" ? outerBaseRadius : innerBaseRadius;
+        const baseRadiusX =
+          node.ring === "outer" ? outerBaseRadiusX : innerBaseRadiusX;
+        const baseRadiusY =
+          node.ring === "outer" ? outerBaseRadiusY : innerBaseRadiusY;
 
-        // Keep chips from overlapping the center card by pushing radius outward.
-        const cardBoundaryRadius =
-          Math.min(safeClearanceX / absCos, safeClearanceY / absSin) + 8;
-        const minRadius = Math.max(baseRadius, cardBoundaryRadius);
+        // Keep chips from overlapping the center card by pushing outward.
+        const minScale = Math.max(
+          1,
+          (safeClearanceX + 8) / (absCos * baseRadiusX),
+          (safeClearanceY + 8) / (absSin * baseRadiusY)
+        );
 
-        const maxByX = (stageWidth / 2 - edgePaddingX) / absCos;
-        const maxByY = (stageHeight / 2 - edgePaddingY) / absSin;
-        const maxRadius = Math.min(maxByX, maxByY);
+        const maxByX = (stageWidth / 2 - edgePaddingX) / (absCos * baseRadiusX);
+        const maxByY = (stageHeight / 2 - edgePaddingY) / (absSin * baseRadiusY);
+        const maxScale = Math.min(maxByX, maxByY);
+        const scale = Math.min(minScale, maxScale);
 
-        const radius = Math.min(minRadius, maxRadius);
+        const radiusX = baseRadiusX * scale;
+        const radiusY = baseRadiusY * scale;
 
         return {
           ...node,
           angle,
-          x: centerX + cos * radius,
-          y: centerY + sin * radius,
+          x: centerX + cos * radiusX,
+          y: centerY + sin * radiusY,
         };
       }),
     [
@@ -236,9 +259,11 @@ export default function DialView({
       centerY,
       edgePaddingX,
       edgePaddingY,
-      innerBaseRadius,
+      innerBaseRadiusX,
+      innerBaseRadiusY,
       nodes,
-      outerBaseRadius,
+      outerBaseRadiusX,
+      outerBaseRadiusY,
       rotation,
       safeClearanceX,
       safeClearanceY,
