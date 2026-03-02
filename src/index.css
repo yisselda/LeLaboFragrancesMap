@@ -6,6 +6,12 @@
   --color-border: #e0d6cc;
   --color-muted: #7f7974;
   --color-soft: #f9f6f2;
+  --dial-stage-border: rgba(128, 106, 84, 0.44);
+  --dial-guide-border: rgba(128, 106, 84, 0.52);
+  --dial-pill-border: rgba(42, 36, 31, 0.34);
+  --dial-pill-selected-border: rgba(30, 25, 21, 0.74);
+  --dial-pill-shadow: rgba(18, 15, 12, 0.14);
+  --dial-card-border: rgba(132, 116, 99, 0.48);
   --font-family: "Futura PT", "Century Gothic", "AppleGothic", sans-serif;
 }
 
@@ -305,15 +311,17 @@ input {
   position: relative;
   width: 100%;
   height: clamp(460px, 72dvh, 860px);
-  border: 1px solid rgba(196, 168, 130, 0.34);
+  border: 1px solid var(--dial-stage-border);
   border-radius: clamp(20px, 3vw, 34px);
   background: linear-gradient(
       170deg,
-      rgba(255, 255, 255, 0.9) 0%,
-      rgba(247, 241, 234, 0.76) 45%,
-      rgba(239, 231, 222, 0.58) 100%
+      rgba(255, 255, 255, 0.96) 0%,
+      rgba(247, 241, 234, 0.86) 45%,
+      rgba(236, 225, 214, 0.74) 100%
     ),
     radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -18px 30px rgba(120, 103, 87, 0.08);
   touch-action: none;
   user-select: none;
 }
@@ -326,7 +334,7 @@ input {
   position: absolute;
   top: 50%;
   left: 50%;
-  border: 1px dashed rgba(196, 168, 130, 0.38);
+  border: 1px dashed var(--dial-guide-border);
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
@@ -349,13 +357,13 @@ input {
   min-height: 44px;
   min-width: 44px;
   max-width: clamp(118px, 14vw, 180px);
-  padding: 9px 12px;
-  border: 1px solid rgba(26, 26, 26, 0.18);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.94);
-  color: var(--color-text);
+  padding: 9px 14px;
+  border: 1px solid var(--dial-pill-border);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.98);
+  color: #171412;
   opacity: 1;
-  box-shadow: 0 1px 4px rgba(15, 15, 15, 0.08);
+  box-shadow: 0 2px 6px var(--dial-pill-shadow);
   cursor: pointer;
   transition: opacity 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease,
     border-color 0.2s ease;
@@ -366,6 +374,7 @@ input {
   text-align: center;
   font-size: clamp(9px, 1.3vw, 11px);
   letter-spacing: 0.09em;
+  font-weight: 600;
   line-height: 1.2;
   white-space: nowrap;
   overflow: hidden;
@@ -373,18 +382,19 @@ input {
 }
 
 .city-pill.selected {
-  border-color: rgba(26, 26, 26, 0.56);
-  box-shadow: 0 6px 16px rgba(20, 20, 20, 0.16);
+  border-color: var(--dial-pill-selected-border);
+  background: #fff;
+  box-shadow: 0 9px 22px rgba(20, 16, 12, 0.2);
   transform: translate(-50%, -50%) scale(1.02);
   z-index: 2;
 }
 
 .city-pill.matched {
-  border-color: rgba(196, 168, 130, 0.8);
+  border-color: rgba(166, 137, 102, 0.86);
 }
 
 .city-pill.dimmed {
-  opacity: 0.35;
+  opacity: 0.58;
 }
 
 .dial-center-wrap {
@@ -397,11 +407,11 @@ input {
 
 .dial-center-card {
   width: min(64%, 520px);
-  background: rgba(255, 255, 255, 0.94);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.97);
+  border: 1px solid var(--dial-card-border);
   padding: clamp(18px, 2.6vw, 28px);
   text-align: center;
-  box-shadow: 0 8px 26px rgba(22, 22, 22, 0.08);
+  box-shadow: 0 10px 30px rgba(22, 18, 14, 0.12);
   pointer-events: auto;
 }
 
@@ -417,7 +427,7 @@ input {
   font-size: clamp(10px, 1.4vw, 12px);
   letter-spacing: 0.04em;
   font-style: italic;
-  color: var(--color-muted);
+  color: #65605a;
   margin-bottom: 8px;
   line-height: 1.4;
 }
@@ -425,7 +435,7 @@ input {
 .dial-center-notes {
   font-size: clamp(9px, 1.2vw, 11px);
   letter-spacing: 0.08em;
-  color: var(--color-muted);
+  color: #58524c;
   margin-bottom: 8px;
   line-height: 1.5;
 }
@@ -433,7 +443,7 @@ input {
 .dial-center-city {
   font-size: clamp(11px, 1.6vw, 13px);
   letter-spacing: 0.08em;
-  color: #4f4a45;
+  color: #3f3a35;
   margin-bottom: 4px;
 }
 
@@ -442,7 +452,7 @@ input {
   font-size: 10px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: #5f5852;
 }
 
 .dial-center-country {
