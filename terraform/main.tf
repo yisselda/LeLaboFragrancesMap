@@ -13,13 +13,20 @@ provider "github" {
 
 resource "github_repository" "this" {
   name        = var.repository_name
-  description = "Interactive world map of Le Labo city-exclusive fragrances"
-  homepage_url = "https://${var.github_owner}.github.io/${var.repository_name}/"
+  description = "Le Labo City Exclusives: a quiet, city-first fragrance explorer."
+  homepage_url = "https://${var.github_owner}.github.io/${var.repository_name}/?view=dial&city=Paris"
 
   visibility = "public"
   has_issues  = true
 
-  topics = ["le-labo", "fragrances", "map", "leaflet", "react"]
+  topics = [
+    "le-labo",
+    "city-exclusives",
+    "fragrance",
+    "react",
+    "leaflet",
+    "editorial-ui"
+  ]
 
   pages {
     build_type = "workflow"
