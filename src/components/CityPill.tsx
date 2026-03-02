@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, type CSSProperties } from "react";
 import type { Fragrance } from "../types/fragrance";
 
 interface CityPillProps {
@@ -6,8 +6,8 @@ interface CityPillProps {
   x: number;
   y: number;
   selected: boolean;
-  dimmed: boolean;
   matched: boolean;
+  visualOpacity: number;
   onSelect: (fragrance: Fragrance) => void;
   suppressClick: boolean;
 }
@@ -17,19 +17,25 @@ function CityPill({
   x,
   y,
   selected,
-  dimmed,
   matched,
+  visualOpacity,
   onSelect,
   suppressClick,
 }: CityPillProps) {
+  const style = {
+    left: `${x}px`,
+    top: `${y}px`,
+    "--pill-opacity": visualOpacity,
+  } as CSSProperties;
+
   return (
     <button
       type="button"
       className={`city-pill ${selected ? "selected" : ""} ${
-        dimmed ? "dimmed" : ""
-      } ${matched ? "matched" : ""}`}
+        matched ? "matched" : ""
+      }`}
       data-fragrance-name={fragrance.name}
-      style={{ left: `${x}px`, top: `${y}px` }}
+      style={style}
       onClick={() => {
         if (!suppressClick) {
           onSelect(fragrance);
