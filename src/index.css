@@ -493,6 +493,10 @@ input {
   background-image: url("/icons/right-arrow.png");
 }
 
+.ring-mobile-bottles {
+  display: none;
+}
+
 .ring-cover-viewport {
   overflow-x: auto;
   overflow-y: hidden;
@@ -1239,6 +1243,16 @@ input {
 @media (max-width: 768px) {
   .ringNavBtn {
     display: none;
+  }
+
+  .ring-mobile-bottles {
+    display: block;
+    width: clamp(138px, 44vw, 184px);
+    height: auto;
+    margin: 10px auto 0;
+    opacity: 0.8;
+    pointer-events: none;
+    user-select: none;
   }
 
   .ring-cover-column::before,
