@@ -203,35 +203,52 @@ export default function RingCoverCarousel({
                 }}
                 aria-live={card.kind === "current" ? "polite" : undefined}
               >
-                <p className="ring-cover-fragrance">{card.fragrance.name}</p>
-                <p className="ring-cover-city">{card.fragrance.city}</p>
-                <p className="ring-cover-country">{card.fragrance.country}</p>
-                {card.kind === "current" && card.fragrance.tagline && (
-                  <p className="ring-cover-tagline">{card.fragrance.tagline}</p>
-                )}
-                {card.kind === "current" &&
-                  card.fragrance.notes &&
-                  card.fragrance.notes.length > 0 && (
-                    <p className="ring-cover-notes">
-                      {card.fragrance.notes.join(" · ")}
-                    </p>
+                <div className="ring-cover-column">
+                  <div className="ring-cover-top">
+                    <p className="ring-cover-fragrance">{card.fragrance.name}</p>
+                    <p className="ring-cover-city">{card.fragrance.city}</p>
+                  </div>
+
+                  <div className="ring-cover-divider" aria-hidden="true" />
+
+                  <div className="ring-cover-body">
+                    <p className="ring-cover-country">{card.fragrance.country}</p>
+                    {card.kind === "current" && card.fragrance.description && (
+                      <p className="ring-cover-description">
+                        {card.fragrance.description}
+                      </p>
+                    )}
+                    {card.kind === "current" && card.fragrance.tagline && (
+                      <p className="ring-cover-tagline">{card.fragrance.tagline}</p>
+                    )}
+                    {card.kind === "current" &&
+                      card.fragrance.notes &&
+                      card.fragrance.notes.length > 0 && (
+                        <p className="ring-cover-notes">
+                          {card.fragrance.notes.join(" · ")}
+                        </p>
+                      )}
+                  </div>
+
+                  {card.kind === "current" && (
+                    <div className="ring-cover-footer">
+                      {card.fragrance.url && (
+                        <a
+                          className="ring-cover-link"
+                          href={card.fragrance.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(event) => event.stopPropagation()}
+                        >
+                          View on Le Labo &rarr;
+                        </a>
+                      )}
+                      <p className="ring-cover-meta">
+                        {card.fragrance.city} — {safeSelectedIndex + 1} / {total}
+                      </p>
+                    </div>
                   )}
-                {card.kind === "current" && card.fragrance.url && (
-                  <a
-                    className="ring-cover-link"
-                    href={card.fragrance.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    View on Le Labo &rarr;
-                  </a>
-                )}
-                {card.kind === "current" && (
-                  <p className="ring-cover-meta">
-                    {card.fragrance.city} — {safeSelectedIndex + 1} / {total}
-                  </p>
-                )}
+                </div>
               </article>
             );
           })}
