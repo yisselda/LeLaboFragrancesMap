@@ -240,7 +240,7 @@ input {
 }
 
 .dial-search-wrap {
-  width: min(100%, 640px);
+  width: min(100%, 860px);
 }
 
 .dial-search-box {
@@ -278,7 +278,9 @@ input {
 }
 
 .dial-stage-shell {
-  width: min(100%, 900px);
+  width: min(100%, 1120px);
+  flex: 1;
+  min-height: 460px;
   display: flex;
   justify-content: center;
   position: relative;
@@ -301,11 +303,17 @@ input {
 
 .dial-stage {
   position: relative;
-  width: min(100%, clamp(360px, 72vw, 760px));
-  aspect-ratio: 1 / 1;
+  width: 100%;
+  height: clamp(460px, 72dvh, 860px);
   border: 1px solid rgba(196, 168, 130, 0.34);
-  border-radius: 50%;
-  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.9) 0%, rgba(246, 240, 233, 0.7) 46%, rgba(240, 231, 220, 0.45) 100%);
+  border-radius: clamp(20px, 3vw, 34px);
+  background: linear-gradient(
+      170deg,
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(247, 241, 234, 0.76) 45%,
+      rgba(239, 231, 222, 0.58) 100%
+    ),
+    radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.7), rgba(0, 0, 0, 0));
   touch-action: none;
   user-select: none;
 }
@@ -319,19 +327,20 @@ input {
   top: 50%;
   left: 50%;
   border: 1px dashed rgba(196, 168, 130, 0.38);
-  border-radius: 50%;
   transform: translate(-50%, -50%);
   pointer-events: none;
 }
 
 .dial-orbit-guide.outer {
-  width: var(--dial-outer-diameter);
-  height: var(--dial-outer-diameter);
+  width: var(--dial-outer-width);
+  height: var(--dial-outer-height);
+  border-radius: var(--dial-outer-radius);
 }
 
 .dial-orbit-guide.inner {
-  width: var(--dial-inner-diameter);
-  height: var(--dial-inner-diameter);
+  width: var(--dial-inner-width);
+  height: var(--dial-inner-height);
+  border-radius: var(--dial-inner-radius);
 }
 
 .city-pill {
@@ -339,7 +348,7 @@ input {
   transform: translate(-50%, -50%);
   min-height: 44px;
   min-width: 44px;
-  max-width: clamp(118px, 19vw, 170px);
+  max-width: clamp(118px, 14vw, 180px);
   padding: 9px 12px;
   border: 1px solid rgba(26, 26, 26, 0.18);
   border-radius: 999px;
@@ -387,12 +396,13 @@ input {
 }
 
 .dial-center-card {
-  width: min(78%, 360px);
+  width: min(64%, 520px);
   background: rgba(255, 255, 255, 0.94);
   border: 1px solid var(--color-border);
-  padding: clamp(16px, 3.2vw, 26px);
+  padding: clamp(18px, 2.6vw, 28px);
   text-align: center;
   box-shadow: 0 8px 26px rgba(22, 22, 22, 0.08);
+  pointer-events: auto;
 }
 
 .dial-center-name {
@@ -401,6 +411,23 @@ input {
   text-transform: uppercase;
   font-weight: 700;
   margin-bottom: 8px;
+}
+
+.dial-center-tagline {
+  font-size: clamp(10px, 1.4vw, 12px);
+  letter-spacing: 0.04em;
+  font-style: italic;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.dial-center-notes {
+  font-size: clamp(9px, 1.2vw, 11px);
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .dial-center-city {
@@ -416,6 +443,26 @@ input {
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--color-muted);
+}
+
+.dial-center-country {
+  margin-bottom: 10px;
+}
+
+.dial-center-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+
+.dial-center-link:hover {
+  border-color: var(--color-text);
 }
 
 /* Utility */
@@ -542,7 +589,7 @@ input {
   }
 
   .dial-stage {
-    width: min(100%, 96vw);
+    height: clamp(420px, 66dvh, 620px);
   }
 
   .city-pill {
@@ -551,6 +598,6 @@ input {
   }
 
   .dial-center-card {
-    width: min(80%, 320px);
+    width: min(74%, 360px);
   }
 }

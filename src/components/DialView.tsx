@@ -21,14 +21,37 @@ interface DialViewProps {
 
 interface DialNode {
   fragrance: Fragrance;
-  baseAngle: number;
+  baseProgress: number;
   ring: "outer" | "inner";
 }
 
+interface RectPath {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  radius: number;
+  topStraight: number;
+  rightStraight: number;
+  bottomStraight: number;
+  leftStraight: number;
+  halfTopStraight: number;
+  quarterArc: number;
+  perimeter: number;
+}
+
+interface StageBounds {
+  width: number;
+  height: number;
+}
+
 const TAU = Math.PI * 2;
-const ANCHOR_ANGLE = -Math.PI / 2;
 const OUTER_RING_COUNT = 14;
 const HINT_DISMISS_KEY = "le-labo-dial-hint-dismissed";
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.min(Math.max(value, min), max);
+}
 
 function normalizeAngle(angle: number): number {
   let normalized = angle % TAU;
@@ -37,10 +60,163 @@ function normalizeAngle(angle: number): number {
   return normalized;
 }
 
+function normalizeProgress(progress: number): number {
+  return ((progress % 1) + 1) % 1;
+}
+
+function shortestProgressDelta(from: number, to: number): number {
+  let delta = normalizeProgress(to - from);
+  if (delta > 0.5) {
+    delta -= 1;
+  }
+  return delta;
+}
+
 function easeInOutQuad(progress: number): number {
   return progress < 0.5
     ? 2 * progress * progress
     : 1 - Math.pow(-2 * progress + 2, 2) / 2;
+}
+
+function buildRoundedRectPath(
+  stageWidth: number,
+  stageHeight: number,
+  padX: number,
+  padY: number,
+  radiusFactor: number
+): RectPath {
+  const width = Math.max(stageWidth - padX * 2, 180);
+  const height = Math.max(stageHeight - padY * 2, 180);
+
+  const x = (stageWidth - width) / 2;
+  const y = (stageHeight - height) / 2;
+
+  const maxRadius = Math.max(Math.min(width, height) / 2 - 1, 12);
+  const radius = clamp(Math.min(width, height) * radiusFactor, 12, maxRadius);
+
+  const topStraight = Math.max(width - radius * 2, 0);
+  const rightStraight = Math.max(height - radius * 2, 0);
+  const bottomStraight = topStraight;
+  const leftStraight = rightStraight;
+  const halfTopStraight = topStraight / 2;
+  const quarterArc = (Math.PI * radius) / 2;
+
+  const perimeter =
+    halfTopStraight +
+    quarterArc +
+    rightStraight +
+    quarterArc +
+    bottomStraight +
+    quarterArc +
+    leftStraight +
+    quarterArc +
+    halfTopStraight;
+
+  return {
+    x,
+    y,
+    width,
+    height,
+    radius,
+    topStraight,
+    rightStraight,
+    bottomStraight,
+    leftStraight,
+    halfTopStraight,
+    quarterArc,
+    perimeter,
+  };
+}
+
+function pointOnRoundedRectPath(path: RectPath, rawProgress: number) {
+  const progress = normalizeProgress(rawProgress);
+  let distance = progress * path.perimeter;
+
+  const {
+    x,
+    y,
+    width,
+    height,
+    radius,
+    halfTopStraight,
+    quarterArc,
+    rightStraight,
+    bottomStraight,
+    leftStraight,
+  } = path;
+
+  if (distance <= halfTopStraight) {
+    return {
+      x: x + width / 2 + distance,
+      y,
+    };
+  }
+  distance -= halfTopStraight;
+
+  if (distance <= quarterArc) {
+    const theta = -Math.PI / 2 + distance / radius;
+    return {
+      x: x + width - radius + Math.cos(theta) * radius,
+      y: y + radius + Math.sin(theta) * radius,
+    };
+  }
+  distance -= quarterArc;
+
+  if (distance <= rightStraight) {
+    return {
+      x: x + width,
+      y: y + radius + distance,
+    };
+  }
+  distance -= rightStraight;
+
+  if (distance <= quarterArc) {
+    const theta = distance / radius;
+    return {
+      x: x + width - radius + Math.cos(theta) * radius,
+      y: y + height - radius + Math.sin(theta) * radius,
+    };
+  }
+  distance -= quarterArc;
+
+  if (distance <= bottomStraight) {
+    return {
+      x: x + width - radius - distance,
+      y: y + height,
+    };
+  }
+  distance -= bottomStraight;
+
+  if (distance <= quarterArc) {
+    const theta = Math.PI / 2 + distance / radius;
+    return {
+      x: x + radius + Math.cos(theta) * radius,
+      y: y + height - radius + Math.sin(theta) * radius,
+    };
+  }
+  distance -= quarterArc;
+
+  if (distance <= leftStraight) {
+    return {
+      x,
+      y: y + height - radius - distance,
+    };
+  }
+  distance -= leftStraight;
+
+  if (distance <= quarterArc) {
+    const theta = Math.PI + distance / radius;
+    return {
+      x: x + radius + Math.cos(theta) * radius,
+      y: y + radius + Math.sin(theta) * radius,
+    };
+  }
+  distance -= quarterArc;
+
+  return {
+    x: x + radius + distance,
+    y,
+  };
 }
 
 export default function DialView({
@@ -62,15 +238,15 @@ export default function DialView({
     const outerCount = Math.min(OUTER_RING_COUNT, orderedFragrances.length);
     const innerCount = Math.max(orderedFragrances.length - outerCount, 0);
 
-    const outerStep = outerCount > 0 ? TAU / outerCount : 0;
-    const innerStep = innerCount > 0 ? TAU / innerCount : 0;
+    const outerStep = outerCount > 0 ? 1 / outerCount : 0;
+    const innerStep = innerCount > 0 ? 1 / innerCount : 0;
     const innerOffset = innerCount > 0 ? innerStep / 2 : 0;
 
     return orderedFragrances.map((fragrance, index) => {
       if (index < outerCount) {
         return {
           fragrance,
-          baseAngle: index * outerStep,
+          baseProgress: index * outerStep,
           ring: "outer",
         };
       }
@@ -78,7 +254,7 @@ export default function DialView({
       const innerIndex = index - outerCount;
       return {
         fragrance,
-        baseAngle: innerIndex * innerStep + innerOffset,
+        baseProgress: innerIndex * innerStep + innerOffset,
         ring: "inner",
       };
     });
@@ -89,7 +265,7 @@ export default function DialView({
     [nodes]
   );
 
-  const [rotation, setRotation] = useState(() => {
+  const [rotationOffset, setRotationOffset] = useState(() => {
     if (!selectedFragrance) {
       return 0;
     }
@@ -99,18 +275,24 @@ export default function DialView({
       return 0;
     }
 
-    return normalizeAngle(ANCHOR_ANGLE - selectedNode.baseAngle);
+    return normalizeProgress(-selectedNode.baseProgress);
   });
-  const rotationRef = useRef(rotation);
+  const rotationOffsetRef = useRef(rotationOffset);
+
+  const [stageBounds, setStageBounds] = useState<StageBounds>({
+    width: 0,
+    height: 0,
+  });
 
   const animationFrameRef = useRef<number | null>(null);
   const dragFrameRef = useRef<number | null>(null);
-  const pendingDragRotationRef = useRef<number | null>(null);
+  const pendingDragOffsetRef = useRef<number | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
 
   const pointerIdRef = useRef<number | null>(null);
+  const pointerDownFragranceNameRef = useRef<string | null>(null);
   const dragStartAngleRef = useRef(0);
-  const dragStartRotationRef = useRef(0);
+  const dragStartOffsetRef = useRef(0);
   const draggedRef = useRef(false);
 
   const [isDragging, setIsDragging] = useState(false);
@@ -123,12 +305,21 @@ export default function DialView({
       return true;
     }
   });
-  const [stageSize, setStageSize] = useState(0);
 
-  const effectiveSize = stageSize || 640;
-  const outerRadius = Math.min(Math.max(effectiveSize * 0.44, 120), 270);
-  const innerRadius = Math.min(Math.max(effectiveSize * 0.29, 78), 188);
-  const center = effectiveSize / 2;
+  const stageWidth = stageBounds.width || 920;
+  const stageHeight = stageBounds.height || 620;
+
+  const outerPath = useMemo(() => {
+    const padX = clamp(stageWidth * 0.06, 24, 86);
+    const padY = clamp(stageHeight * 0.08, 24, 84);
+    return buildRoundedRectPath(stageWidth, stageHeight, padX, padY, 0.12);
+  }, [stageHeight, stageWidth]);
+
+  const innerPath = useMemo(() => {
+    const padX = clamp(stageWidth * 0.24, 88, 260);
+    const padY = clamp(stageHeight * 0.26, 88, 220);
+    return buildRoundedRectPath(stageWidth, stageHeight, padX, padY, 0.18);
+  }, [stageHeight, stageWidth]);
 
   const selectedName = selectedFragrance?.name ?? null;
   const normalizedSearch = searchTerm.trim().toLowerCase();
@@ -136,25 +327,32 @@ export default function DialView({
   const dialStyle = useMemo(
     () =>
       ({
-        "--dial-outer-diameter": `${outerRadius * 2}px`,
-        "--dial-inner-diameter": `${innerRadius * 2}px`,
+        "--dial-outer-width": `${outerPath.width}px`,
+        "--dial-outer-height": `${outerPath.height}px`,
+        "--dial-outer-radius": `${outerPath.radius}px`,
+        "--dial-inner-width": `${innerPath.width}px`,
+        "--dial-inner-height": `${innerPath.height}px`,
+        "--dial-inner-radius": `${innerPath.radius}px`,
       }) as CSSProperties,
-    [innerRadius, outerRadius]
+    [innerPath, outerPath]
   );
 
   const positionedNodes = useMemo(
     () =>
       nodes.map((node) => {
-        const radius = node.ring === "outer" ? outerRadius : innerRadius;
-        const angle = node.baseAngle + rotation;
+        const path = node.ring === "outer" ? outerPath : innerPath;
+        const point = pointOnRoundedRectPath(
+          path,
+          node.baseProgress + rotationOffset
+        );
 
         return {
           ...node,
-          x: center + Math.cos(angle) * radius,
-          y: center + Math.sin(angle) * radius,
+          x: point.x,
+          y: point.y,
         };
       }),
-    [center, innerRadius, nodes, outerRadius, rotation]
+    [innerPath, nodes, outerPath, rotationOffset]
   );
 
   const matchingNameSet = useMemo(() => {
@@ -185,19 +383,19 @@ export default function DialView({
     }
   }, []);
 
-  const animateToRotation = useCallback((targetRotation: number) => {
+  const animateToOffset = useCallback((targetOffset: number) => {
     if (animationFrameRef.current !== null) {
       cancelAnimationFrame(animationFrameRef.current);
       animationFrameRef.current = null;
     }
 
-    const target = normalizeAngle(targetRotation);
-    const start = rotationRef.current;
-    const delta = normalizeAngle(target - start);
+    const target = normalizeProgress(targetOffset);
+    const start = rotationOffsetRef.current;
+    const delta = shortestProgressDelta(start, target);
 
-    if (Math.abs(delta) < 0.001) {
-      rotationRef.current = target;
-      setRotation(target);
+    if (Math.abs(delta) < 0.0002) {
+      rotationOffsetRef.current = target;
+      setRotationOffset(target);
       return;
     }
 
@@ -207,10 +405,10 @@ export default function DialView({
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
       const easedProgress = easeInOutQuad(progress);
-      const next = normalizeAngle(start + delta * easedProgress);
+      const next = normalizeProgress(start + delta * easedProgress);
 
-      rotationRef.current = next;
-      setRotation(next);
+      rotationOffsetRef.current = next;
+      setRotationOffset(next);
 
       if (progress < 1) {
         animationFrameRef.current = requestAnimationFrame(tick);
@@ -222,36 +420,36 @@ export default function DialView({
     animationFrameRef.current = requestAnimationFrame(tick);
   }, []);
 
-  const getAnchorRotation = useCallback(
+  const getAnchorOffset = useCallback(
     (fragranceName: string): number | null => {
       const node = nodeByName.get(fragranceName);
       if (!node) {
         return null;
       }
-      return normalizeAngle(ANCHOR_ANGLE - node.baseAngle);
+      return normalizeProgress(-node.baseProgress);
     },
     [nodeByName]
   );
 
   const selectAndAnchor = useCallback(
     (fragrance: Fragrance, animate = true) => {
-      const targetRotation = getAnchorRotation(fragrance.name);
-      if (targetRotation === null) {
+      const targetOffset = getAnchorOffset(fragrance.name);
+      if (targetOffset === null) {
         return;
       }
 
       onSelectFragrance(fragrance);
 
       if (animate) {
-        animateToRotation(targetRotation);
+        animateToOffset(targetOffset);
       } else {
-        rotationRef.current = targetRotation;
-        setRotation(targetRotation);
+        rotationOffsetRef.current = targetOffset;
+        setRotationOffset(targetOffset);
       }
 
       dismissHint();
     },
-    [animateToRotation, dismissHint, getAnchorRotation, onSelectFragrance]
+    [animateToOffset, dismissHint, getAnchorOffset, onSelectFragrance]
   );
 
   const findBestMatch = useCallback(
@@ -303,7 +501,7 @@ export default function DialView({
   }, [findBestMatch, searchTerm, selectAndAnchor]);
 
   const findNearestNode = useCallback(
-    (currentRotation: number): DialNode | null => {
+    (currentOffset: number): DialNode | null => {
       if (nodes.length === 0) {
         return null;
       }
@@ -312,8 +510,8 @@ export default function DialView({
       let smallestDelta = Number.POSITIVE_INFINITY;
 
       for (const node of nodes) {
-        const angle = node.baseAngle + currentRotation;
-        const delta = Math.abs(normalizeAngle(ANCHOR_ANGLE - angle));
+        const progress = normalizeProgress(node.baseProgress + currentOffset);
+        const delta = Math.abs(shortestProgressDelta(progress, 0));
 
         if (delta < smallestDelta) {
           smallestDelta = delta;
@@ -326,8 +524,8 @@ export default function DialView({
     [nodes]
   );
 
-  const updateRotationFromPointer = useCallback((nextRotation: number) => {
-    pendingDragRotationRef.current = normalizeAngle(nextRotation);
+  const updateOffsetFromPointer = useCallback((nextOffset: number) => {
+    pendingDragOffsetRef.current = normalizeProgress(nextOffset);
 
     if (dragFrameRef.current !== null) {
       return;
@@ -335,14 +533,14 @@ export default function DialView({
 
     dragFrameRef.current = requestAnimationFrame(() => {
       dragFrameRef.current = null;
-      const pending = pendingDragRotationRef.current;
+      const pending = pendingDragOffsetRef.current;
       if (pending === null) {
         return;
       }
 
-      rotationRef.current = pending;
-      setRotation(pending);
-      pendingDragRotationRef.current = null;
+      rotationOffsetRef.current = pending;
+      setRotationOffset(pending);
+      pendingDragOffsetRef.current = null;
     });
   }, []);
 
@@ -374,8 +572,13 @@ export default function DialView({
       }
 
       pointerIdRef.current = event.pointerId;
+      const target = event.target as HTMLElement | null;
+      pointerDownFragranceNameRef.current =
+        target
+          ?.closest<HTMLButtonElement>("[data-fragrance-name]")
+          ?.dataset.fragranceName ?? null;
       dragStartAngleRef.current = getPointerAngle(event);
-      dragStartRotationRef.current = rotationRef.current;
+      dragStartOffsetRef.current = rotationOffsetRef.current;
       draggedRef.current = false;
 
       event.currentTarget.setPointerCapture(event.pointerId);
@@ -392,17 +595,17 @@ export default function DialView({
       }
 
       const pointerAngle = getPointerAngle(event);
-      const delta = normalizeAngle(pointerAngle - dragStartAngleRef.current);
-      const nextRotation = dragStartRotationRef.current + delta;
+      const deltaAngle = normalizeAngle(pointerAngle - dragStartAngleRef.current);
+      const nextOffset = dragStartOffsetRef.current + deltaAngle / TAU;
 
-      if (Math.abs(delta) > 0.03) {
+      if (Math.abs(deltaAngle) > 0.03) {
         draggedRef.current = true;
         setSuppressClick(true);
       }
 
-      updateRotationFromPointer(nextRotation);
+      updateOffsetFromPointer(nextOffset);
     },
-    [getPointerAngle, updateRotationFromPointer]
+    [getPointerAngle, updateOffsetFromPointer]
   );
 
   const handlePointerUp = useCallback(
@@ -423,17 +626,26 @@ export default function DialView({
         dragFrameRef.current = null;
       }
 
-      if (pendingDragRotationRef.current !== null) {
-        const pending = pendingDragRotationRef.current;
-        pendingDragRotationRef.current = null;
-        rotationRef.current = pending;
-        setRotation(pending);
+      if (pendingDragOffsetRef.current !== null) {
+        const pending = pendingDragOffsetRef.current;
+        pendingDragOffsetRef.current = null;
+        rotationOffsetRef.current = pending;
+        setRotationOffset(pending);
       }
 
-      const nearest = findNearestNode(rotationRef.current);
-      if (nearest) {
-        selectAndAnchor(nearest.fragrance, true);
+      if (!draggedRef.current && pointerDownFragranceNameRef.current) {
+        const directNode = nodeByName.get(pointerDownFragranceNameRef.current);
+        if (directNode) {
+          selectAndAnchor(directNode.fragrance, true);
+        }
+      } else {
+        const nearest = findNearestNode(rotationOffsetRef.current);
+        if (nearest) {
+          selectAndAnchor(nearest.fragrance, true);
+        }
       }
+
+      pointerDownFragranceNameRef.current = null;
 
       if (!draggedRef.current) {
         setTimeout(() => setSuppressClick(false), 0);
@@ -442,7 +654,7 @@ export default function DialView({
 
       setTimeout(() => setSuppressClick(false), 120);
     },
-    [findNearestNode, selectAndAnchor]
+    [findNearestNode, nodeByName, selectAndAnchor]
   );
 
   const handleKeyDown = useCallback(
@@ -496,7 +708,21 @@ export default function DialView({
         return;
       }
 
-      setStageSize(Math.min(entry.contentRect.width, entry.contentRect.height));
+      setStageBounds((current) => {
+        const next = {
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        };
+
+        if (
+          Math.abs(current.width - next.width) < 0.5 &&
+          Math.abs(current.height - next.height) < 0.5
+        ) {
+          return current;
+        }
+
+        return next;
+      });
     });
 
     resizeObserver.observe(stage);
@@ -542,7 +768,7 @@ export default function DialView({
           style={dialStyle}
           tabIndex={0}
           role="group"
-          aria-label="Circular city selector. Drag to rotate or use left and right arrow keys."
+          aria-label="Rectangular city selector. Drag to rotate or use arrow keys."
           onKeyDown={handleKeyDown}
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}

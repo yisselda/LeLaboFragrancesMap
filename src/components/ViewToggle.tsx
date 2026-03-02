@@ -22,7 +22,7 @@ export default function ViewToggle({ value, onChange }: ViewToggleProps) {
         className={`view-toggle-button ${value === "list" ? "active" : ""}`}
         onClick={() => onChange("list")}
       >
-        List
+        Map
       </button>
     </div>
   );

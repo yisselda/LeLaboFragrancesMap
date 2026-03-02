@@ -28,6 +28,7 @@ function CityPill({
       className={`city-pill ${selected ? "selected" : ""} ${
         dimmed ? "dimmed" : ""
       } ${matched ? "matched" : ""}`}
+      data-fragrance-name={fragrance.name}
       style={{ left: `${x}px`, top: `${y}px` }}
       onClick={() => {
         if (!suppressClick) {
