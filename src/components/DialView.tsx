@@ -83,6 +83,13 @@ function easeInOutQuad(progress: number): number {
     : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 }
 
+function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined" || !window.matchMedia) {
+    return false;
+  }
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function buildRoundedRectPath(
   stageWidth: number,
   stageHeight: number,
@@ -478,8 +485,14 @@ export default function DialView({
       return;
     }
 
+    const duration = prefersReducedMotion() ? 0 : 300;
+    if (duration === 0) {
+      rotationOffsetRef.current = target;
+      setRotationOffset(target);
+      return;
+    }
+
     const startTime = performance.now();
-    const duration = 300;
 
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
