@@ -1,4 +1,11 @@
 :root {
+  --font-sans: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+  --text: #1a1a1a;
+  --muted: rgba(26, 26, 26, 0.62);
+  --measure: 62ch;
   --paper-bg: #f6f4ef;
   --paper-bg-alt: #f1eee8;
   --paper-elevated: #fbfaf7;
@@ -22,8 +29,6 @@
   --tracking-label: 0.11em;
   --tracking-wide: 0.18em;
   --bg: var(--paper-bg);
-  --text: var(--ink);
-  --muted: var(--ink-muted);
   --chipBg: rgba(255, 255, 255, 0.68);
   --chipBgSelected: rgba(255, 255, 255, 0.94);
   --borderSubtle: rgba(135, 125, 115, 0.24);
@@ -49,7 +54,7 @@
   --dial-pill-border: rgba(70, 62, 54, 0.4);
   --dial-pill-selected-border: rgba(36, 31, 26, 0.84);
   --dial-card-border: var(--border-strong);
-  --font-family: "Futura PT", "Century Gothic", "AppleGothic", sans-serif;
+  --font-family: var(--font-sans);
 }
 
 *,
@@ -460,6 +465,11 @@ input {
   text-align: right;
 }
 
+.ring-cover-fragrance,
+.ring-cover-city {
+  font-family: var(--font-sans);
+}
+
 .ring-cover-city {
   font-size: clamp(20px, 2.8vw, 28px);
   line-height: 1.1;
@@ -480,31 +490,50 @@ input {
 }
 
 .ring-cover-country {
+  font-family: var(--font-mono);
   font-size: clamp(12px, 1.2vw, 14px);
-  letter-spacing: 0.08em;
+  line-height: 1.75;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
-  color: rgba(72, 64, 57, var(--ring-muted-opacity));
+  color: var(--muted);
+  max-width: var(--measure);
   margin-bottom: 16px;
 }
 
 .ring-cover-tagline {
-  font-size: clamp(14px, 1.4vw, 16px);
-  color: rgba(69, 62, 55, 0.85);
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: color-mix(in srgb, var(--text) 85%, transparent);
   font-style: italic;
+  line-height: 1.75;
+  letter-spacing: 0.015em;
+  max-width: var(--measure);
   margin-bottom: 8px;
-  line-height: 1.4;
+}
+
+.ring-cover-description {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: var(--muted);
+  letter-spacing: 0.015em;
+  line-height: 1.75;
+  max-width: var(--measure);
+  margin-bottom: 10px;
 }
 
 .ring-cover-notes {
-  font-size: clamp(12px, 1.25vw, 14px);
-  color: rgba(73, 66, 59, 0.62);
-  letter-spacing: 0.02em;
-  line-height: 1.45;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: var(--muted);
+  letter-spacing: 0.015em;
+  line-height: 1.75;
+  max-width: var(--measure);
   margin-bottom: 24px;
 }
 
 .ring-cover-link {
   display: inline-block;
+  font-family: var(--font-sans);
   font-size: clamp(11px, 1vw, 12px);
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -522,10 +551,44 @@ input {
 }
 
 .ring-cover-meta {
+  font-family: var(--font-mono);
   margin-top: 14px;
-  font-size: clamp(10px, 0.95vw, 11px);
-  letter-spacing: 0.07em;
-  color: rgba(90, 82, 74, 0.74);
+  font-size: clamp(12px, 1.1vw, 13px);
+  line-height: 1.7;
+  letter-spacing: 0.015em;
+  color: var(--muted);
+  max-width: var(--measure);
+}
+
+.ring-card-fragrance,
+.ring-card-city {
+  font-family: var(--font-sans);
+}
+
+.ring-card-country,
+.ring-card-tagline,
+.ring-card-notes,
+.ring-card-description {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  line-height: 1.75;
+  letter-spacing: 0.015em;
+  color: var(--text);
+  max-width: var(--measure);
+}
+
+.ring-card-country {
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.ring-card-notes,
+.ring-card-description {
+  color: var(--muted);
+}
+
+.ring-card-link {
+  font-family: var(--font-sans);
 }
 
 .ring-cover-hint {
@@ -828,6 +891,7 @@ input {
 }
 
 .dial-center-name {
+  font-family: var(--font-sans);
   font-size: clamp(15px, 1.7vw, var(--type-xl));
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -837,23 +901,38 @@ input {
 }
 
 .dial-center-tagline {
-  font-size: clamp(var(--type-sm), 1.2vw, var(--type-md));
-  letter-spacing: 0.02em;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  letter-spacing: 0.015em;
   font-style: italic;
-  color: var(--ink-muted);
+  color: color-mix(in srgb, var(--text) 85%, transparent);
+  line-height: 1.75;
+  max-width: var(--measure);
   margin-bottom: 8px;
-  line-height: 1.28;
+}
+
+.dial-center-description {
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  letter-spacing: 0.015em;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: var(--measure);
+  margin-bottom: 8px;
 }
 
 .dial-center-notes {
-  font-size: clamp(var(--type-xs), 1.1vw, var(--type-sm));
-  letter-spacing: 0.04em;
-  color: #5f5953;
+  font-family: var(--font-mono);
+  font-size: clamp(13px, 1.4vw, 15px);
+  letter-spacing: 0.015em;
+  color: var(--muted);
+  line-height: 1.75;
+  max-width: var(--measure);
   margin-bottom: 10px;
-  line-height: 1.32;
 }
 
 .dial-center-city {
+  font-family: var(--font-sans);
   font-size: clamp(var(--type-md), 1.4vw, 13px);
   letter-spacing: 0.06em;
   color: #3f3a35;
@@ -862,10 +941,13 @@ input {
 
 .dial-center-country,
 .dial-center-empty {
-  font-size: var(--type-sm);
-  letter-spacing: 0.08em;
+  font-family: var(--font-mono);
+  font-size: clamp(12px, 1.1vw, 14px);
+  line-height: 1.7;
+  letter-spacing: 0.015em;
   text-transform: uppercase;
-  color: var(--ink-muted);
+  color: var(--muted);
+  max-width: var(--measure);
 }
 
 .dial-center-country {
@@ -874,6 +956,7 @@ input {
 
 .dial-center-link {
   display: inline-block;
+  font-family: var(--font-sans);
   font-size: var(--type-sm);
   letter-spacing: 0.09em;
   text-transform: uppercase;
