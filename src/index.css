@@ -108,6 +108,24 @@ input {
   background: rgba(246, 244, 239, 0.94);
 }
 
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.2vw, 14px);
+}
+
+.header-bottle {
+  width: clamp(32px, 3vw, 46px);
+  height: auto;
+  display: block;
+  opacity: 0.94;
+  flex: 0 0 auto;
+}
+
+.header-copy {
+  min-width: 0;
+}
+
 .header-title {
   font-size: var(--type-md);
   font-weight: 700;
@@ -1286,6 +1304,10 @@ input {
 @media (max-width: 720px) {
   .header {
     padding: 6px 10px 5px;
+  }
+
+  .header-bottle {
+    width: 24px;
   }
 
   .header-disclaimer {
