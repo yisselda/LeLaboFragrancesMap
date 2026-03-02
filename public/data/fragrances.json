@@ -1,0 +1,200 @@
+[
+  {
+    "name": "ALDEHYDE 44",
+    "city": "Dallas",
+    "country": "USA",
+    "lat": 32.7767,
+    "lng": -96.797,
+    "url": "https://www.lelabofragrances.com/aldehyde-44.html",
+    "notes": ["aldehydes", "rose", "musk", "cedar"],
+    "description": "A luminous and intoxicating fragrance that balances floral rose with cool aldehydes. Timeless and sophisticated, evoking old-world glamour.",
+    "tagline": "Luminous floral, classic elegance"
+  },
+  {
+    "name": "BAIE ROSE 26",
+    "city": "Chicago",
+    "country": "USA",
+    "lat": 41.8781,
+    "lng": -87.6298,
+    "url": "https://www.lelabofragrances.com/baie-rose-26.html",
+    "notes": ["pink pepper", "rose", "musk", "woods"],
+    "description": "A spicy floral with bright pink pepper and soft rose at its heart. Sensual and modern, with a peppery edge that keeps it fresh.",
+    "tagline": "Spicy rose, modern sensuality"
+  },
+  {
+    "name": "BENJOIN 19",
+    "city": "Moscow",
+    "country": "Russia",
+    "lat": 55.7558,
+    "lng": 37.6173,
+    "url": "https://www.lelabofragrances.com/benjoin-19.html",
+    "notes": ["benzoin", "amber", "leather", "vanilla"],
+    "description": "Warm and resinous with creamy benzoin and rich leather notes. A comforting, almost caramel-like fragrance with depth and substance.",
+    "tagline": "Warm amber, creamy leather"
+  },
+  {
+    "name": "BIGARADE 18",
+    "city": "Hong Kong",
+    "country": "China",
+    "lat": 22.3193,
+    "lng": 114.1694,
+    "url": "https://www.lelabofragrances.com/bigarade-18.html",
+    "notes": ["bergamot", "bigarade orange", "cedar", "musk"],
+    "description": "A vibrant citrus celebration of bitter orange and bergamot with woody cedar undertones. Fresh, zesty, and Mediterranean in spirit.",
+    "tagline": "Bitter citrus, woody brightness"
+  },
+  {
+    "name": "CEDRAT 37",
+    "city": "Berlin",
+    "country": "Germany",
+    "lat": 52.52,
+    "lng": 13.405,
+    "url": "https://www.lelabofragrances.com/cedrat-37.html",
+    "notes": ["cedrat", "iris", "musk", "ambroxan"],
+    "description": "Airy and geometric with crisp cedrat and creamy iris. A minimalist citrus that feels clean, abstract, and distinctly modern.",
+    "tagline": "Citrus iris, geometric chic"
+  },
+  {
+    "name": "CITRON 28",
+    "city": "Seoul",
+    "country": "South Korea",
+    "lat": 37.5665,
+    "lng": 126.978,
+    "url": "https://www.lelabofragrances.com/citron-28.html",
+    "notes": ["citron", "orange blossom", "musk", "amber"],
+    "description": "Bright and uplifting with zesty citron and delicate orange blossom. A cheerful, fruity fragrance that evokes citrus groves in bloom.",
+    "tagline": "Citrus bloom, sunny warmth"
+  },
+  {
+    "name": "CORIANDRE 39",
+    "city": "Mexico City",
+    "country": "Mexico",
+    "lat": 19.4326,
+    "lng": -99.1332,
+    "url": "https://www.lelabofragrances.com/coriandre-39.html",
+    "notes": ["coriander", "cardamom", "cedar", "musk"],
+    "description": "Spicy and aromatic with warm coriander and cardamom creating an inviting gourmand feel. Herbaceous and slightly sweet, with woody base.",
+    "tagline": "Spice blend, warm aromatic"
+  },
+  {
+    "name": "CUIR 28",
+    "city": "Dubai",
+    "country": "UAE",
+    "lat": 25.2048,
+    "lng": 55.2708,
+    "url": "https://www.lelabofragrances.com/cuir-28.html",
+    "notes": ["leather", "amber", "oud", "cedar"],
+    "description": "Rich and animalic with soft leather and precious oud. A luxurious, smoky fragrance that feels both ancient and contemporary.",
+    "tagline": "Leather and oud, luxury"
+  },
+  {
+    "name": "GAIAC 10",
+    "city": "Tokyo",
+    "country": "Japan",
+    "lat": 35.6762,
+    "lng": 139.6503,
+    "url": "https://www.lelabofragrances.com/gaiac-10.html",
+    "notes": ["gaiac wood", "vetiver", "musk", "amber"],
+    "description": "A smoky, woody meditation with earthy gaiac wood and clean vetiver. Meditative and grounding, with a subtle musky drydown.",
+    "tagline": "Smoky wood, meditative"
+  },
+  {
+    "name": "LIMETTE 37",
+    "city": "San Francisco",
+    "country": "USA",
+    "lat": 37.7749,
+    "lng": -122.4194,
+    "url": "https://www.lelabofragrances.com/limette-37.html",
+    "notes": ["lime", "cedar", "musk", "woods"],
+    "description": "Bright and slightly herbal with tart lime and woody cedar. A playful, modern citrus with a sophisticated dry finish.",
+    "tagline": "Tart lime, woody play"
+  },
+  {
+    "name": "MOUSSE DE CHENE 30",
+    "city": "Amsterdam",
+    "country": "Netherlands",
+    "lat": 52.3676,
+    "lng": 4.9041,
+    "url": "https://www.lelabofragrances.com/mousse-de-chene-30.html",
+    "notes": ["oakmoss", "woods", "musk", "cypress"],
+    "description": "Earthy and nostalgic with soft oakmoss and natural woods. A timeless mossy fragrance that feels like a forest floor after rain.",
+    "tagline": "Oakmoss woods, nostalgic"
+  },
+  {
+    "name": "MUSC 25",
+    "city": "Los Angeles",
+    "country": "USA",
+    "lat": 34.0522,
+    "lng": -118.2437,
+    "url": "https://www.lelabofragrances.com/musc-25.html",
+    "notes": ["musk", "woods", "amber", "vanilla"],
+    "description": "Soft and sensual with creamy musk and warm woody notes. A second-skin fragrance that feels like a gentle embrace.",
+    "tagline": "Creamy musk, soft sensuality"
+  },
+  {
+    "name": "MYRRHE 55",
+    "city": "Shanghai",
+    "country": "China",
+    "lat": 31.2304,
+    "lng": 121.4737,
+    "url": "https://www.lelabofragrances.com/myrrhe-55.html",
+    "notes": ["myrrh", "benzoin", "vetiver", "cedarwood"],
+    "description": "Resinous and exotic with precious myrrh and warm benzoin. An incense-like fragrance with spiritual depth and ancient allure.",
+    "tagline": "Resinous myrrh, incense exotic"
+  },
+  {
+    "name": "OSMANTHUS 19",
+    "city": "Kyoto",
+    "country": "Japan",
+    "lat": 35.0116,
+    "lng": 135.7681,
+    "url": "https://www.lelabofragrances.com/osmanthus-19.html",
+    "notes": ["osmanthus", "apricot", "woods", "musk"],
+    "description": "Floral and fruity with delicate osmanthus flower and warm apricot. A delicate, slightly sweet fragrance with woody warmth.",
+    "tagline": "Osmanthus apricot, floral fruit"
+  },
+  {
+    "name": "POIVRE 23",
+    "city": "London",
+    "country": "UK",
+    "lat": 51.5074,
+    "lng": -0.1278,
+    "url": "https://www.lelabofragrances.com/poivre-23.html",
+    "notes": ["black pepper", "cloves", "vetiver", "cedarwood"],
+    "description": "Spicy and peppery with sharp black pepper and warm clove spice. A bold, energetic fragrance that feels refined and slightly herbal.",
+    "tagline": "Spicy pepper, bold energy"
+  },
+  {
+    "name": "TABAC 28",
+    "city": "Miami",
+    "country": "USA",
+    "lat": 25.7617,
+    "lng": -80.1918,
+    "url": "https://www.lelabofragrances.com/tabac-28.html",
+    "notes": ["tobacco", "vetiver", "musk", "leather"],
+    "description": "Smoky and sophisticated with warm tobacco leaf and dry vetiver. An intoxicating fragrance with a distinctly masculine character.",
+    "tagline": "Smoky tobacco, sophisticated"
+  },
+  {
+    "name": "TUBEREUSE 40",
+    "city": "New York",
+    "country": "USA",
+    "lat": 40.7128,
+    "lng": -74.006,
+    "url": "https://www.lelabofragrances.com/tubereuse-40.html",
+    "notes": ["tuberose", "lily of the valley", "musk", "amber"],
+    "description": "Creamy and intoxicating with potent tuberose and delicate lily of the valley. A lush, sensual floral that is both beautiful and indolic.",
+    "tagline": "Creamy tuberose, intoxicating"
+  },
+  {
+    "name": "VANILLE 44",
+    "city": "Paris",
+    "country": "France",
+    "lat": 48.8566,
+    "lng": 2.3522,
+    "url": "https://www.lelabofragrances.com/vanille-44.html",
+    "notes": ["vanilla", "benzoin", "leather", "tonka"],
+    "description": "Rich and creamy with Madagascar vanilla and warm benzoin. A comforting yet sophisticated fragrance with subtle leather undertones.",
+    "tagline": "Creamy vanilla, warm sophistication"
+  }
+]

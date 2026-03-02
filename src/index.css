@@ -1,0 +1,241 @@
+:root {
+  --color-text: #1a1a1a;
+  --color-bg: #f5f0eb;
+  --color-accent: #c4a882;
+  --color-white: #ffffff;
+  --color-border: #e0d6cc;
+  --color-muted: #999;
+  --font-family: "Futura PT", "Century Gothic", "AppleGothic", sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-family);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  padding: 20px 32px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-white);
+}
+
+.header-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.header-disclaimer {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin-top: 4px;
+}
+
+/* Loading & Error States */
+.loading-state,
+.error-state {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-white);
+}
+
+.loading-message,
+.error-message {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+  font-weight: 500;
+}
+
+.error-message {
+  color: #a88c82;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 260px;
+  background: var(--color-white);
+  border-right: 1px solid var(--color-border);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.sidebar-search-container {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.sidebar-search {
+  width: 100%;
+  padding: 8px 10px;
+  font-family: var(--font-family);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--color-border);
+  background: var(--color-white);
+  color: var(--color-text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.sidebar-search::placeholder {
+  color: var(--color-muted);
+}
+
+.sidebar-search:focus {
+  border-color: var(--color-accent);
+}
+
+.sidebar-list {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-card {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  cursor: pointer;
+  transition: background-color 0.15s, border-left-color 0.15s;
+  border-left: 2px solid transparent;
+}
+
+.sidebar-card:hover {
+  background-color: #faf8f5;
+  border-left-color: var(--color-accent);
+}
+
+.sidebar-card.selected {
+  background-color: #f5f0eb;
+  border-left-color: var(--color-accent);
+}
+
+.sidebar-card-name {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+  color: var(--color-text);
+}
+
+.sidebar-card-location {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+}
+
+/* Scrollbar styling */
+.sidebar-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-list::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+.sidebar-list::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted);
+}
+
+/* Leaflet popup overrides */
+.leaflet-popup-content-wrapper {
+  border-radius: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  padding: 0;
+}
+
+.leaflet-popup-content {
+  margin: 16px 20px;
+  font-family: var(--font-family);
+  line-height: 1.6;
+}
+
+.leaflet-popup-tip {
+  box-shadow: none;
+}
+
+.popup-name {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.popup-tagline {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  font-style: italic;
+  color: var(--color-muted);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.popup-notes {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--color-muted);
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.popup-city {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.popup-link {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  padding-bottom: 1px;
+  transition: border-color 0.2s;
+}
+
+.popup-link:hover {
+  border-color: var(--color-text);
+}
