@@ -527,9 +527,29 @@ input {
   width: 92%;
   max-width: 900px;
   margin: 0 auto;
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   row-gap: clamp(20px, 2.4vw, 30px);
+}
+
+.ring-cover-column::before,
+.ring-cover-column::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(0, 0, 0, 0.06);
+  pointer-events: none;
+}
+
+.ring-cover-column::before {
+  left: calc(-1 * clamp(30px, 4vw, 60px));
+}
+
+.ring-cover-column::after {
+  right: calc(-1 * clamp(30px, 4vw, 60px));
 }
 
 .ring-cover-top {
@@ -1183,6 +1203,13 @@ input {
   .ring-cover-card.prev,
   .ring-cover-card.next {
     filter: blur(0.45px);
+  }
+}
+
+@media (max-width: 768px) {
+  .ring-cover-column::before,
+  .ring-cover-column::after {
+    display: none;
   }
 }
 
