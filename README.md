@@ -1,4 +1,5 @@
-# Le Labo City Exclusives
+# Le Labo City Exclusives 
+
 
 _An independent catalog of Le Labo City Exclusives._
 
@@ -6,6 +7,8 @@ This project looks at City Exclusives through place first, then scent.
 Each entry links a city to its fragrance in a clean, direct way.
 
 It is meant for daydreaming, not shopping.
+
+<img height="200" alt="big-bottle" src="https://github.com/user-attachments/assets/89ebe057-9b9e-44a6-8fc6-ef3a23a8dbbc" />
 
 ---
 
