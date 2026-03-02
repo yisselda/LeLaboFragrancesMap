@@ -441,33 +441,56 @@ input {
   isolation: isolate;
 }
 
-.ring-cover::before,
-.ring-cover::after {
-  content: "";
+.ringNavBtn {
+  appearance: none;
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: clamp(24px, 4vw, 56px);
-  pointer-events: none;
-  z-index: 2;
+  top: 50%;
+  z-index: 3;
+  transform: translateY(-50%);
+  box-sizing: border-box;
+  inline-size: clamp(100px, 8.4vw, 120px);
+  aspect-ratio: 3 / 4;
+  border: 0;
+  background-color: transparent;
+  cursor: pointer;
+  padding: 6px;
+  line-height: 0;
+  opacity: 0.75;
+  transition: opacity 0.14s ease;
 }
 
-.ring-cover::before {
+.ringNavBtn:hover {
+  opacity: 1;
+}
+
+.ringNavBtn:focus-visible {
+  outline: 2px solid rgba(40, 34, 28, 0.55);
+  outline-offset: 6px;
+}
+
+.ringNavBtnPrev {
   left: 0;
-  background: linear-gradient(
-    to right,
-    var(--paper-bg) 20%,
-    rgba(246, 244, 239, 0)
-  );
+  transform: translate(-68%, -50%);
 }
 
-.ring-cover::after {
+.ringNavBtnNext {
   right: 0;
-  background: linear-gradient(
-    to left,
-    var(--paper-bg) 20%,
-    rgba(246, 244, 239, 0)
-  );
+  transform: translate(68%, -50%);
+}
+
+.leftArrowIcon,
+.rightArrowIcon {
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center;
+}
+
+.leftArrowIcon {
+  background-image: url("/icons/left-arrow.png");
+}
+
+.rightArrowIcon {
+  background-image: url("/icons/right-arrow.png");
 }
 
 .ring-cover-viewport {
@@ -476,6 +499,7 @@ input {
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   padding: 0 0 10px;
   scroll-padding-inline: 0;
 }
@@ -488,12 +512,12 @@ input {
   display: flex;
   justify-content: center;
   align-items: stretch;
-  gap: clamp(10px, 1.8vw, 16px);
+  gap: 0;
   padding: 0;
 }
 
 .ring-cover-card {
-  flex: 0 0 calc(100% - 72px);
+  flex: 0 0 100%;
   scroll-snap-align: center;
   border-radius: 0;
   background: transparent;
@@ -501,8 +525,8 @@ input {
   border: none;
   padding: clamp(48px, 7vw, 72px) 0;
   display: block;
-  transition: transform 0.24s ease, opacity 0.24s ease, filter 0.24s ease,
-    color 0.24s ease;
+  transition: transform 0.14s ease, opacity 0.14s ease, filter 0.14s ease,
+    color 0.14s ease;
   cursor: pointer;
 }
 
@@ -513,12 +537,11 @@ input {
   cursor: default;
 }
 
-.ring-cover-card.prev,
-.ring-cover-card.next {
-  opacity: 0.62;
-  transform: scale(0.9);
+.ring-cover-card[data-active="false"] {
+  opacity: 1;
+  transform: scale(1);
   filter: none;
-  color: rgba(58, 50, 43, 0.58);
+  color: inherit;
 }
 
 .ring-cover-column {
@@ -1213,17 +1236,32 @@ input {
   }
 }
 
-@media (min-width: 721px) {
-  .ring-cover-card.prev,
-  .ring-cover-card.next {
-    filter: blur(0.45px);
-  }
-}
-
 @media (max-width: 768px) {
+  .ringNavBtn {
+    display: none;
+  }
+
   .ring-cover-column::before,
   .ring-cover-column::after {
     display: none;
+  }
+
+  .ring-cover-track.is-dragging .ring-cover-card[data-active="false"] {
+    opacity: 0.74;
+    filter: blur(0.9px);
+    transform: scale(0.992);
+  }
+
+  .ring-cover-track.is-dragging .ring-cover-card[data-active="true"] {
+    opacity: 0.9;
+    filter: blur(0.3px);
+    transform: scale(0.997);
+  }
+}
+
+@media (min-width: 769px) {
+  .ring-cover-viewport {
+    overflow-x: hidden;
   }
 }
 
@@ -1321,23 +1359,18 @@ input {
   }
 
   .ring-cover-track {
-    gap: 8px;
+    gap: 0;
     padding: 0;
   }
 
   .ring-cover-card {
-    flex-basis: calc(100% - 30px);
+    flex-basis: 100%;
     padding: clamp(32px, 8vw, 40px) 0;
     scroll-snap-stop: always;
   }
 
   .ring-cover-column {
     width: 94%;
-  }
-
-  .ring-cover::before,
-  .ring-cover::after {
-    width: 18px;
   }
 
   .ring-cover-hint {
@@ -1374,7 +1407,7 @@ input {
 
 @media (max-width: 640px) {
   .ring-cover-card {
-    flex-basis: calc(100% - 24px);
+    flex-basis: 100%;
     padding: clamp(28px, 8vw, 34px) 0;
   }
 
@@ -1407,10 +1440,19 @@ input {
   .ring-cover-meta {
     margin-top: 8px;
   }
+}
 
-  .ring-cover::before,
-  .ring-cover::after {
-    width: 14px;
+@media (max-width: 768px) and (prefers-reduced-motion: reduce) {
+  .ring-cover-track.is-dragging .ring-cover-card[data-active="false"] {
+    opacity: 0.8;
+    filter: none;
+    transform: scale(1);
+  }
+
+  .ring-cover-track.is-dragging .ring-cover-card[data-active="true"] {
+    opacity: 0.94;
+    filter: none;
+    transform: scale(1);
   }
 }
 

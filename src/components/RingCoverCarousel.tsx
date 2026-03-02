@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { Fragrance } from "../types/fragrance";
 
 interface RingCoverCarouselProps {
@@ -32,6 +38,17 @@ export default function RingCoverCarousel({
   const viewportRef = useRef<HTMLDivElement | null>(null);
   const cardRefs = useRef<Array<HTMLElement | null>>([]);
   const settleTimerRef = useRef<number | null>(null);
+  const dragReleaseTimerRef = useRef<number | null>(null);
+  const scrollDragTimerRef = useRef<number | null>(null);
+  const swipeStartRef = useRef<{
+    pointerId: number;
+    x: number;
+    y: number;
+    handled: boolean;
+  } | null>(null);
+  const suppressCardClickRef = useRef(false);
+  const suppressClickTimerRef = useRef<number | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
   const [showHint, setShowHint] = useState(() => {
     if (typeof window === "undefined") {
       return false;
@@ -97,6 +114,55 @@ export default function RingCoverCarousel({
     }
   }, []);
 
+  const markSwipeHandled = useCallback(() => {
+    suppressCardClickRef.current = true;
+
+    if (suppressClickTimerRef.current) {
+      window.clearTimeout(suppressClickTimerRef.current);
+    }
+
+    suppressClickTimerRef.current = window.setTimeout(() => {
+      suppressCardClickRef.current = false;
+      suppressClickTimerRef.current = null;
+    }, 180);
+  }, []);
+
+  const beginDragState = useCallback(() => {
+    if (dragReleaseTimerRef.current) {
+      window.clearTimeout(dragReleaseTimerRef.current);
+      dragReleaseTimerRef.current = null;
+    }
+    if (scrollDragTimerRef.current) {
+      window.clearTimeout(scrollDragTimerRef.current);
+      scrollDragTimerRef.current = null;
+    }
+    setIsDragging(true);
+  }, []);
+
+  const endDragStateSoon = useCallback((delay = 120) => {
+    if (dragReleaseTimerRef.current) {
+      window.clearTimeout(dragReleaseTimerRef.current);
+    }
+
+    dragReleaseTimerRef.current = window.setTimeout(() => {
+      setIsDragging(false);
+      dragReleaseTimerRef.current = null;
+    }, delay);
+  }, []);
+
+  const markScrollDragging = useCallback(() => {
+    beginDragState();
+
+    if (scrollDragTimerRef.current) {
+      window.clearTimeout(scrollDragTimerRef.current);
+    }
+
+    scrollDragTimerRef.current = window.setTimeout(() => {
+      setIsDragging(false);
+      scrollDragTimerRef.current = null;
+    }, 120);
+  }, [beginDragState]);
+
   useEffect(() => {
     if (cards.length === 0 || !viewportRef.current) {
       return;
@@ -154,6 +220,15 @@ export default function RingCoverCarousel({
       if (settleTimerRef.current) {
         window.clearTimeout(settleTimerRef.current);
       }
+      if (dragReleaseTimerRef.current) {
+        window.clearTimeout(dragReleaseTimerRef.current);
+      }
+      if (scrollDragTimerRef.current) {
+        window.clearTimeout(scrollDragTimerRef.current);
+      }
+      if (suppressClickTimerRef.current) {
+        window.clearTimeout(suppressClickTimerRef.current);
+      }
     },
     []
   );
@@ -162,15 +237,97 @@ export default function RingCoverCarousel({
     return null;
   }
 
+  const activeCardIndex = cards.findIndex((card) => card.kind === "current");
   return (
     <section className="ring-cover" aria-label="City fragrance carousel">
+      <button
+        type="button"
+        className="ringNavBtn ringNavBtnPrev leftArrowIcon"
+        aria-label="Previous city"
+        onClick={() => {
+          dismissHint();
+          onSelectIndex(prevIndex);
+        }}
+      />
       <div
         className="ring-cover-viewport"
         ref={viewportRef}
         tabIndex={0}
         aria-label="Swipe left or right to change city"
-        onScroll={scheduleSettle}
-        onPointerDown={dismissHint}
+        onScroll={() => {
+          scheduleSettle();
+          markScrollDragging();
+        }}
+        onPointerDown={(event) => {
+          dismissHint();
+          beginDragState();
+          swipeStartRef.current = {
+            pointerId: event.pointerId,
+            x: event.clientX,
+            y: event.clientY,
+            handled: false,
+          };
+        }}
+        onPointerMove={(event) => {
+          const start = swipeStartRef.current;
+          if (!start || start.pointerId !== event.pointerId || start.handled) {
+            return;
+          }
+
+          const dx = event.clientX - start.x;
+          const dy = event.clientY - start.y;
+
+          if (Math.abs(dx) < 36 || Math.abs(dx) <= Math.abs(dy)) {
+            return;
+          }
+
+          start.handled = true;
+          markSwipeHandled();
+
+          if (dx < 0) {
+            onSelectIndex(nextIndex);
+          } else {
+            onSelectIndex(prevIndex);
+          }
+        }}
+        onPointerUp={(event) => {
+          const start = swipeStartRef.current;
+          if (!start || start.pointerId !== event.pointerId) {
+            endDragStateSoon(120);
+            return;
+          }
+
+          if (!start.handled) {
+            const dx = event.clientX - start.x;
+            const dy = event.clientY - start.y;
+
+            if (Math.abs(dx) >= 36 && Math.abs(dx) > Math.abs(dy)) {
+              markSwipeHandled();
+              if (dx < 0) {
+                onSelectIndex(nextIndex);
+              } else {
+                onSelectIndex(prevIndex);
+              }
+            }
+          }
+
+          swipeStartRef.current = null;
+          endDragStateSoon(120);
+        }}
+        onPointerCancel={() => {
+          swipeStartRef.current = null;
+          endDragStateSoon(120);
+        }}
+        onTouchStart={() => {
+          dismissHint();
+          beginDragState();
+        }}
+        onTouchEnd={() => {
+          endDragStateSoon(120);
+        }}
+        onTouchCancel={() => {
+          endDragStateSoon(120);
+        }}
         onKeyDown={(event) => {
           if (event.key === "ArrowLeft") {
             event.preventDefault();
@@ -185,9 +342,10 @@ export default function RingCoverCarousel({
           }
         }}
       >
-        <div className="ring-cover-track">
+        <div className={`ring-cover-track${isDragging ? " is-dragging" : ""}`}>
           {cards.map((card, index) => {
             const sideCard = card.kind !== "current";
+            const isActive = index === activeCardIndex;
             return (
               <article
                 key={card.key}
@@ -195,7 +353,12 @@ export default function RingCoverCarousel({
                   cardRefs.current[index] = element;
                 }}
                 className={`ring-cover-card ${card.kind}`}
+                data-active={isActive ? "true" : "false"}
+                data-slide-index={index}
                 onClick={() => {
+                  if (suppressCardClickRef.current) {
+                    return;
+                  }
                   dismissHint();
                   if (sideCard) {
                     onSelectIndex(card.absoluteIndex);
@@ -254,6 +417,15 @@ export default function RingCoverCarousel({
           })}
         </div>
       </div>
+      <button
+        type="button"
+        className="ringNavBtn ringNavBtnNext rightArrowIcon"
+        aria-label="Next city"
+        onClick={() => {
+          dismissHint();
+          onSelectIndex(nextIndex);
+        }}
+      />
 
       {showHint && (
         <button type="button" className="ring-cover-hint" onClick={dismissHint}>
