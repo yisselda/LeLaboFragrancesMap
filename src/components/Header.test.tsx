@@ -14,4 +14,12 @@ describe("Header", () => {
       screen.getAllByText(/not affiliated with le labo/i).length
     ).toBeGreaterThan(0);
   });
+
+  it("renders the about link to GitHub", () => {
+    render(<Header />);
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+      "href",
+      "https://github.com/yisselda/LeLaboFragrancesMap"
+    );
+  });
 });

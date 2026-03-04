@@ -108,6 +108,13 @@ input {
   background: rgba(246, 244, 239, 0.94);
 }
 
+.header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
 .header-brand {
   display: flex;
   align-items: center;
@@ -140,6 +147,25 @@ input {
   color: var(--ink-muted);
   margin-top: 2px;
   opacity: 0.78;
+}
+
+.header-about {
+  font-size: var(--type-xs);
+  letter-spacing: var(--tracking-tight);
+  color: var(--ink-muted);
+  opacity: 0.78;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.header-about:hover {
+  text-decoration: underline;
+}
+
+.header-about:focus-visible {
+  outline: 2px solid #1a1714;
+  outline-offset: 2px;
 }
 
 /* App layout */
@@ -1298,6 +1324,10 @@ input {
 
   .header-disclaimer {
     display: none;
+  }
+
+  .header-about {
+    font-size: var(--type-xs);
   }
 
   .header-title {
