@@ -40,3 +40,20 @@ Not affiliated with Le Labo.
 ---
 
 Raised in Vanille 44, living the Tubereuse 40 life.
+
+---
+
+## Analytics (GA4)
+
+To measure visits, configure Google Analytics 4:
+
+1. Create a GA4 Web Data Stream and copy your Measurement ID (format: `G-XXXXXXXXXX`).
+2. Add this to your local `.env` (or production env settings):
+
+```bash
+VITE_GA_MEASUREMENT_ID=G-XXXXXXXXXX
+```
+
+3. Deploy the site.
+
+Tracking is enabled only in production builds, and only when `VITE_GA_MEASUREMENT_ID` is set.
